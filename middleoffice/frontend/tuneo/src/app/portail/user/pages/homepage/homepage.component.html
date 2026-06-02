@@ -1,0 +1,761 @@
+<!-- Topbar Start -->
+<div class="container-fluid bg-dark px-5 d-none d-lg-block">
+    <div class="row gx-0">
+        <div class="col-lg-8 text-center text-lg-start mb-2 mb-lg-0">
+            <div class="d-inline-flex align-items-center" style="height: 45px;">
+                <small class="me-3 text-light"><i class="fa fa-map-marker-alt me-2"></i>123 Street, Sousse, Tunisia</small>
+                <small class="me-3 text-light"><i class="fa fa-phone-alt me-2"></i>+216 xx xxx xxx</small>
+                <small class="text-light"><i class="fa fa-envelope-open me-2"></i>Tuneo&#64;gmail.com</small>
+            </div>
+        </div>
+        <div class="col-lg-4 text-center text-lg-end">
+            <div class="d-inline-flex align-items-center" style="height: 45px;">
+                <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href=""><i class="fab fa-twitter fw-normal"></i></a>
+                <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href=""><i class="fab fa-facebook-f fw-normal"></i></a>
+                <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href="mailto:contact@tuneo.tn"><i class="fas fa-envelope"></i></a>
+                <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href=""><i class="fab fa-instagram fw-normal"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Topbar End -->
+
+<!-- Navbar & Hero Start -->
+<div class="container-fluid position-relative p-0">
+
+    <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
+        <a href="" class="navbar-brand p-0">
+            <div style="display:flex;align-items:center;gap:10px;">
+                <img class="dark:hidden" src="/images/logo/logo.png" alt="Logo" width="100" height="20" />
+                <h1 class="text-primary m-0" style="position:relative;top:0.8rem;">TUNÉO</h1>
+            </div>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="fa fa-bars"></span>
+        </button>
+        <div class="navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto py-0">
+                <a href="index.html" class="nav-item nav-link active">Home</a>
+                <a routerLink="/historique" class="nav-item nav-link">Historique</a>
+                <a href="service.html" class="nav-item nav-link">Services</a>
+                <a href="package.html" class="nav-item nav-link">Packages</a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                    <div class="dropdown-menu m-0">
+                        <a href="/home/categories" class="dropdown-item">Catégories</a>
+                        <a href="/home/places" class="dropdown-item">Places</a>
+                    </div>
+                </div>
+                <a href="contact.html" class="nav-item nav-link">Contact</a>
+            </div>
+            @if(isLogin) {
+                <a (click)="logout()" class="btn btn-primary rounded-pill py-2 px-4" style="color:white;background-color:red;">Logout</a>
+            }
+            @if(!isLogin) {
+                <a (click)="login()" routerLink="/signin" class="btn btn-primary rounded-pill py-2 px-4" style="color:white;background-color:green;">Login</a>
+            }
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <div class="container-fluid bg-primary py-5 mb-5 hero-header">
+        <div class="container py-5">
+            <div class="row justify-content-center py-5">
+                <div class="col-lg-10 pt-lg-5 mt-lg-5 text-center">
+
+                    <h1 class="display-3 text-white mb-3 animated slideInDown">Profitez de vos vacances avec nous</h1>
+                    <p class="fs-4 text-white mb-4 animated slideInDown">Trouvez de magnifiques sites en un simple clic</p>
+
+                    <!-- ===== SEARCH WIDGET ===== -->
+                    <div style="max-width:960px;margin:0 auto;text-align:left;">
+
+                        <!-- TABS -->
+                        <div style="display:flex;flex-direction:row;gap:6px;margin-bottom:0;padding:0;flex-wrap:wrap;">
+
+                            <button (click)="setTab('hotels')" [ngStyle]="getTabStyle('hotels')"
+                                style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 20px;border:1.5px solid;border-bottom:none;border-radius:10px 10px 0 0;font-size:13px;font-weight:600;cursor:pointer;min-width:100px;transition:all .2s;">
+                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 21V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14"/><path d="M9 21V12h6v9"/></svg>
+                                Hôtels
+                            </button>
+
+                            <button (click)="setTab('restaurants')" [ngStyle]="getTabStyle('restaurants')"
+                                style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 20px;border:1.5px solid;border-bottom:none;border-radius:10px 10px 0 0;font-size:13px;font-weight:600;cursor:pointer;min-width:100px;transition:all .2s;">
+                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 3v7a4 4 0 0 0 4 4v7"/><path d="M8 3v7"/><path d="M12 3v18"/><path d="M16 3c0 4 4 4 4 8v10"/></svg>
+                                Restaurants
+                            </button>
+
+                            <button (click)="setTab('cafes')" [ngStyle]="getTabStyle('cafes')"
+                                style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 20px;border:1.5px solid;border-bottom:none;border-radius:10px 10px 0 0;font-size:13px;font-weight:600;cursor:pointer;min-width:100px;transition:all .2s;">
+                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 8h13a4 4 0 0 1 0 8H3z"/><path d="M16 8v8"/><path d="M6 16v2a4 4 0 0 0 8 0v-2"/></svg>
+                                Cafés
+                            </button>
+
+                            <button (click)="setTab('hopitaux')" [ngStyle]="getTabStyle('hopitaux')"
+                                style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 20px;border:1.5px solid;border-bottom:none;border-radius:10px 10px 0 0;font-size:13px;font-weight:600;cursor:pointer;min-width:100px;transition:all .2s;">
+                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8M8 12h8"/></svg>
+                                Hôpitaux
+                            </button>
+
+                            <button (click)="setTab('voitures')" [ngStyle]="getTabStyle('voitures')"
+                                style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 20px;border:1.5px solid;border-bottom:none;border-radius:10px 10px 0 0;font-size:13px;font-weight:600;cursor:pointer;min-width:100px;transition:all .2s;">
+                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="5" rx="2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+                                Voitures
+                            </button>
+
+                        </div>
+
+                        <!-- BARRE PRINCIPALE -->
+                       <!-- BARRE PRINCIPALE -->
+<div style="display:flex;flex-direction:row;align-items:center;background:rgba(255,255,255,0.96);border-radius:0 50px 50px 50px;padding:6px 6px 6px 8px;box-shadow:0 4px 20px rgba(0,0,0,0.18);position:relative;z-index:1;flex-wrap:wrap;gap:4px;">
+
+  <!-- RÉGION -->
+  <div style="flex:1.5;padding:8px 14px;display:flex;flex-direction:column;justify-content:center;position:relative;min-width:140px;">
+    <span style="font-size:10px;font-weight:700;color:#555;letter-spacing:.05em;margin-bottom:2px;display:block;">Région</span>
+    <input type="text"
+           placeholder="Tapez ou choisissez..."
+           [(ngModel)]="search.region"
+           list="regions-list"
+           autocomplete="off"
+           style="border:none;outline:none;font-size:13px;font-weight:500;color:#1a1a1a;background:transparent;width:100%;padding:0;" />
+    <datalist id="regions-list">
+      <option *ngFor="let r of regions" [value]="r">{{ r }}</option>
+    </datalist>
+  </div>
+
+  <!-- DÉLÉGATION -->
+  <ng-container *ngIf="hasField('delegation')">
+    <div style="width:1px;height:32px;background:#ddd;flex-shrink:0;"></div>
+    <div style="flex:1;padding:8px 14px;display:flex;flex-direction:column;justify-content:center;min-width:120px;">
+      <span style="font-size:10px;font-weight:700;color:#555;letter-spacing:.05em;margin-bottom:2px;display:block;">Délégation</span>
+      <input type="text"
+             placeholder="Délégation..."
+             [(ngModel)]="search.delegation"
+             style="border:none;outline:none;font-size:13px;color:#1a1a1a;background:transparent;width:100%;padding:0;" />
+    </div>
+  </ng-container>
+
+  <!-- DATE SIMPLE (restaurants, cafés, hôpitaux) -->
+  <ng-container *ngIf="hasField('date')">
+    <div style="width:1px;height:32px;background:#ddd;flex-shrink:0;"></div>
+    <div style="flex:1;padding:8px 14px;display:flex;flex-direction:column;justify-content:center;min-width:150px;">
+      <span style="font-size:10px;font-weight:700;color:#555;letter-spacing:.05em;margin-bottom:2px;display:block;">
+        {{ activeTab === 'voitures' ? 'Date retrait' : 'Date' }}
+      </span>
+      <input type="date"
+             [(ngModel)]="search.checkIn"
+             [min]="today"
+             style="border:none;outline:none;font-size:13px;color:#1a1a1a;width:150px;padding:2px 0;cursor:pointer;" />
+    </div>
+  </ng-container>
+
+  <!-- ARRIVÉE (hôtels, voitures) -->
+  <ng-container *ngIf="hasField('checkIn') && !hasField('date')">
+    <div style="width:1px;height:32px;background:#ddd;flex-shrink:0;"></div>
+    <div style="flex:1;padding:8px 14px;display:flex;flex-direction:column;justify-content:center;min-width:150px;">
+      <span style="font-size:10px;font-weight:700;color:#555;letter-spacing:.05em;margin-bottom:2px;display:block;">
+        {{ activeTab === 'voitures' ? 'Date retrait' : 'Arrivée' }}
+      </span>
+          
+
+
+  <!-- DÉPART / RETOUR (hôtels, voitures) -->
+            <p-datepicker [(ngModel)]="search.checkIn"  placeholder="Choisir date"
+      showIcon
+      iconDisplay="input"
+      inputStyleClass="custom-datepicker-input"
+      panelStyleClass="custom-datepicker-panel" showIcon iconDisplay="input" />
+    </div>
+  </ng-container>
+
+  <!-- DÉPART / RETOUR (hôtels, voitures) -->
+  <ng-container *ngIf="hasField('checkOut')">
+    <div style="width:1px;height:32px;background:#ddd;flex-shrink:0;"></div>
+    <div style="flex:1;padding:8px 14px;display:flex;flex-direction:column;justify-content:center;min-width:150px;">
+      <span style="font-size:10px;font-weight:700;color:#555;letter-spacing:.05em;margin-bottom:2px;display:block;">
+        {{ activeTab === 'voitures' ? 'Date retour' : 'Départ' }}
+      </span>
+       <p-datepicker [(ngModel)]="search.checkOut"  placeholder="Choisir date"
+      showIcon
+      iconDisplay="input"
+      inputStyleClass="custom-datepicker-input"
+      panelStyleClass="custom-datepicker-panel" showIcon iconDisplay="input" />
+    </div>
+  </ng-container>
+
+  <!-- PERSONNES (restaurants, cafés) -->
+  <ng-container *ngIf="hasField('personnes')">
+    <div style="width:1px;height:32px;background:#ddd;flex-shrink:0;"></div>
+    <div style="flex:1;padding:8px 14px;display:flex;flex-direction:column;justify-content:center;min-width:120px;cursor:pointer;"
+         (click)="toggleGuests(); $event.stopPropagation()">
+      <span style="font-size:10px;font-weight:700;color:#555;letter-spacing:.05em;margin-bottom:2px;display:block;">Personnes</span>
+      <div style="font-size:13px;font-weight:600;color:#1a1a1a;user-select:none;">
+        {{ search.personnes }} personne{{ search.personnes > 1 ? 's' : '' }}
+      </div>
+      <!-- Dropdown simplifié -->
+      <div *ngIf="showGuests"
+           (click)="$event.stopPropagation()"
+           style="position:absolute;top:calc(100% + 8px);right:0;width:240px;background:#fff;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,0.13);z-index:9999;padding:16px;border:1px solid #e5e5e5;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;">
+          <span style="font-size:13px;font-weight:600;">Personnes</span>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button type="button" (click)="change('personnes',-1);$event.stopPropagation()" [disabled]="search.personnes<=1"
+                    style="width:28px;height:28px;border-radius:50%;border:1.5px solid #ccc;background:transparent;font-size:16px;cursor:pointer;">−</button>
+            <span style="min-width:20px;text-align:center;font-size:14px;font-weight:600;">{{ search.personnes }}</span>
+            <button type="button" (click)="change('personnes',1);$event.stopPropagation()"
+                    style="width:28px;height:28px;border-radius:50%;border:1.5px solid #ccc;background:transparent;font-size:16px;cursor:pointer;">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- VOYAGEURS (hôtels seulement) -->
+  <ng-container *ngIf="hasField('voyageurs')">
+    <div style="width:1px;height:32px;background:#ddd;flex-shrink:0;"></div>
+    <div style="flex:1.4;padding:8px 14px;display:flex;flex-direction:column;justify-content:center;position:relative;cursor:pointer;min-width:160px;"
+         (click)="toggleGuests(); $event.stopPropagation()">
+      <span style="font-size:10px;font-weight:700;color:#555;letter-spacing:.05em;margin-bottom:2px;display:block;">Voyageurs</span>
+      <div style="font-size:13px;font-weight:600;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;user-select:none;">
+        {{ search.rooms }} chambre{{ search.rooms > 1 ? 's' : '' }},
+        {{ search.personnes }} personne{{ search.personnes > 1 ? 's' : '' }}
+        <span *ngIf="search.children > 0">, {{ search.children }} enfant{{ search.children > 1 ? 's' : '' }}</span>
+      </div>
+      <!-- Dropdown complet chambres + adultes -->
+      <div *ngIf="showGuests"
+           (click)="$event.stopPropagation()"
+           style="position:absolute;top:calc(100% + 8px);right:0;left:auto;width:280px;background:#fff;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,0.13);z-index:9999;padding:16px;border:1px solid #e5e5e5;text-align:left;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid #f0f0f0;">
+          <span style="font-size:13px;font-weight:600;">Chambres</span>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button type="button" (click)="change('rooms',-1);$event.stopPropagation()" [disabled]="search.rooms<=1"
+                    style="width:28px;height:28px;border-radius:50%;border:1.5px solid #ccc;background:transparent;font-size:16px;cursor:pointer;">−</button>
+            <span style="min-width:20px;text-align:center;font-size:14px;font-weight:600;">{{ search.rooms }}</span>
+            <button type="button" (click)="change('rooms',1);$event.stopPropagation()"
+                    style="width:28px;height:28px;border-radius:50%;border:1.5px solid #ccc;background:transparent;font-size:16px;cursor:pointer;">+</button>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;">
+          <div>
+            <span style="display:block;font-size:13px;font-weight:600;">Adultes</span>
+            <span style="display:block;font-size:11px;color:#888;">18 ans et +</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button type="button" (click)="change('personnes',-1);$event.stopPropagation()" [disabled]="search.personnes<=1"
+                    style="width:28px;height:28px;border-radius:50%;border:1.5px solid #ccc;background:transparent;font-size:16px;cursor:pointer;">−</button>
+            <span style="min-width:20px;text-align:center;font-size:14px;font-weight:600;">{{ search.personnes }}</span>
+            <button type="button" (click)="change('personnes',1);$event.stopPropagation()"
+                    style="width:28px;height:28px;border-radius:50%;border:1.5px solid #ccc;background:transparent;font-size:16px;cursor:pointer;">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- BOUTON RECHERCHER -->
+  <button type="button" (click)="searchNow()"
+          style="background:#86B817;color:#fff;border:none;border-radius:50px;padding:14px 24px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;margin-left:6px;">
+    🔍 Rechercher
+  </button>
+
+</div>
+                        <!-- FIN BARRE -->
+
+                    </div>
+                    <!-- FIN SEARCH WIDGET -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- Navbar & Hero End -->
+
+<!-- removed z-index:998; -->
+<!-- Overlay fermeture -->
+<div *ngIf="showGuests || showRegionList"
+     style="position:fixed;top:0;left:0;width:100%;height:100%;"
+     (click)="showGuests=false; showRegionList=false">
+</div>
+    <!-- Navbar & Hero End -->
+
+    <!-- About Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
+                    <div class="position-relative h-100">
+                        <img class="img-fluid position-absolute w-100 h-100" src="img/djem.jpg" alt="" style="object-fit: cover;">
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <h6 class="section-title bg-white text-start text-primary pe-3">à propos de nous</h6>
+                    <h1 class="mb-4">Bienvenue à <span class="text-primary">Tunéo</span></h1>
+                    <p class="mb-4">Tunéo est une plateforme en ligne dédiée à la découverte des meilleurs sites touristiques. Elle permet aux utilisateurs de rechercher, visualiser et réserver facilement des expériences uniques dans diverses destinations..</p>
+                    <p class="mb-4">Tunéo vous offre une expérience simple et rapide pour planifier vos sorties, découvrir les lieux incontournables et profiter au maximum de votre voyage ou de votre temps libre.</p>
+                    <div class="row gy-2 gx-4 mb-4">
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Sites touristiques sélectionnés</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Réservation facile</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Informations fiables</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Plus de 100 destinations et lieux</p>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- About End -->
+
+
+    <!-- Service Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center text-primary px-3">Services</h6>
+                <h1 class="mb-5">Notre Services</h1>
+            </div>
+           <div class="row g-4">
+
+    <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="service-item rounded pt-3">
+            <div class="p-4 text-center">
+                <i class="fa fa-3x fa-map-marked-alt text-primary mb-4"></i>
+                <h5>Exploration des sites touristiques</h5>
+                <p>Découvrez les destinations et les lieux incontournables en Tunisie.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.2s">
+        <div class="service-item rounded pt-3">
+            <div class="p-4 text-center">
+                <i class="fa fa-3x fa-utensils text-primary mb-4"></i>
+                <h5>Recherche de restaurants</h5>
+                <p>Accédez à une sélection des meilleurs restaurants et spécialités locales.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+        <div class="service-item rounded pt-3">
+            <div class="p-4 text-center">
+                <i class="fa fa-3x fa-calendar-check text-primary mb-4"></i>
+                <h5>Réservation en ligne</h5>
+                <p>Réservez facilement vos visites touristiques et vos tables.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.4s">
+        <div class="service-item rounded pt-3">
+            <div class="p-4 text-center">
+                <i class="fa fa-3x fa-star text-primary mb-4"></i>
+                <h5>Système d’avis</h5>
+                <p>Consultez les évaluations et partagez votre expérience.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
+        <div class="service-item rounded pt-3">
+            <div class="p-4 text-center">
+                <i class="fa fa-3x fa-route text-primary mb-4"></i>
+                <h5>Planification de visites</h5>
+                <p>Organisez vos sorties et explorez la Tunisie plus efficacement.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.6s">
+        <div class="service-item rounded pt-3">
+            <div class="p-4 text-center">
+                <i class="fa fa-3x fa-mobile-alt text-primary mb-4"></i>
+                <h5>Plateforme intuitive</h5>
+                <p>Une interface simple pour accéder rapidement aux informations touristiques.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+        </div>
+    </div>
+    <!-- Service End -->
+
+
+    <!-- Destination Start -->
+    <div class="container-xxl py-5 destination">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center text-primary px-3">Destination</h6>
+                <h1 class="mb-5">Destination populaire</h1>
+            </div>
+            <div class="row g-3">
+                <div class="col-lg-7 col-md-6">
+                    <div class="row g-3">
+                        <div class="col-lg-12 col-md-12 wow zoomIn" data-wow-delay="0.1s">
+                           <a class="position-relative d-block overflow-hidden" href="">
+                             <img class="img-fluid" src="img/aiin-draham.jpg" alt="" style="width: 100%; height: 400px; object-fit: cover;">
+                    <div class="bg-white text-danger fw-bold position-absolute top-0 start-0 m-3 py-1 px-2"></div>
+                     <div class="bg-white text-primary fw-bold position-absolute bottom-0 end-0 m-3 py-1 px-2">Ain draham</div>
+                            </a>
+                        </div>
+                        <div class="col-lg-6 col-md-12 wow zoomIn" data-wow-delay="0.3s">
+                            <a class="position-relative d-block overflow-hidden" href="">
+                                <img class="img-fluid" src="img/cart.jpg" alt="" style="width: 100%; height: 400px; object-fit: cover;">
+                                <div class="bg-white text-danger fw-bold position-absolute top-0 start-0 m-3 py-1 px-2"></div>
+                                <div class="bg-white text-primary fw-bold position-absolute bottom-0 end-0 m-3 py-1 px-2">Cartage</div>
+                            </a>
+                        </div>
+                        <div class="col-lg-6 col-md-12 wow zoomIn" data-wow-delay="0.5s">
+                            <a class="position-relative d-block overflow-hidden" href="">
+                                <img class="img-fluid" src="img/to-zeur.jpg" alt="" style="width: 100%; height: 400px; object-fit: cover;">
+                                <div class="bg-white text-danger fw-bold position-absolute top-0 start-0 m-3 py-1 px-2"></div>
+                                <div class="bg-white text-primary fw-bold position-absolute bottom-0 end-0 m-3 py-1 px-2">Tozeur</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-md-6 wow zoomIn" data-wow-delay="0.7s" style="min-height: 350px;">
+                    <a class="position-relative d-block h-100 overflow-hidden" href="">
+                        <img class="img-fluid position-absolute w-100 h-100" src="img/Sidi-Bou-Said.jpg" alt="" style="object-fit: cover;">
+                        <div class="bg-white text-danger fw-bold position-absolute top-0 start-0 m-3 py-1 px-2"></div>
+                        <div class="bg-white text-primary fw-bold position-absolute bottom-0 end-0 m-3 py-1 px-2">Sidi bou Said</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Booking Start -->
+    <!-- Booking Start -->
+<div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container">
+        <div class="booking p-5" style="background: rgba(0,0,0,0.6); border-radius: 15px;">
+            <div class="row g-5 align-items-center">
+
+                <!-- Texte descriptif -->
+                <div class="col-md-6 text-white">
+                    <h6 class="text-white text-uppercase">Réservation</h6>
+                    <h1 class="text-white mb-4">Réservez Votre Tour</h1>
+                    <p class="mb-4">
+                        Explorez la Tunisie avec nos circuits exclusifs et flexibles. Choisissez votre destination préférée et réservez facilement en ligne.
+                    </p>
+                    <p class="mb-4">
+                        De Sidi Bou Saïd aux oasis du Sud, profitez d’expériences uniques et mémorables. Nos packages incluent hébergement, transport et visites guidées.
+                    </p>
+                    <a class="btn btn-outline-light py-3 px-5 mt-2" href="">En savoir plus</a>
+                </div>
+
+                <!-- Formulaire de réservation -->
+                <div class="col-md-6">
+                    <h1 class="text-white mb-4">Réservez un Circuit</h1>
+                    <form>
+                        <div class="row g-3">
+
+                            <!-- Nom -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-transparent" id="name" placeholder="Votre Nom">
+                                    <label for="name">Votre Nom</label>
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control bg-transparent" id="email" placeholder="Votre Email">
+                                    <label for="email">Votre Email</label>
+                                </div>
+                            </div>
+
+                            <!-- Date -->
+                            <div class="col-md-6">
+                                <div class="form-floating date" id="date3" data-target-input="nearest">
+                                    <input type="text" class="form-control bg-transparent datetimepicker-input" id="datetime" placeholder="Date & Heure" data-target="#date3" data-toggle="datetimepicker" />
+                                    <label for="datetime">Date & Heure</label>
+                                </div>
+                            </div>
+
+                            <!-- Destination -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select class="form-select bg-transparent" id="select1">
+                                        <option value="1">Sidi Bou Saïd</option>
+                                        <option value="2">Tozeur</option>
+                                        <option value="3">Carthage</option>
+                                        <option value="4">Ain Draham</option>
+                                    </select>
+                                    <label for="select1">Destination</label>
+                                </div>
+                            </div>
+
+                            <!-- Demande spéciale -->
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea class="form-control bg-transparent" placeholder="Demande spéciale" id="message" style="height: 100px"></textarea>
+                                    <label for="message">Demande spéciale</label>
+                                </div>
+                            </div>
+
+                            <!-- Bouton réserver -->
+                            <div class="col-12">
+                                <button class="btn btn-outline-light w-100 py-3" type="submit">Réserver</button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Booking End -->
+    <!-- Process Start -->
+  <div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center pb-4 wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="section-title bg-white text-center text-primary px-3">Processus</h6>
+            <h1 class="mb-5">3 étapes simples pour réserver</h1>
+        </div>
+        <div class="row gy-5 gx-4 justify-content-center">
+
+            <!-- Étape 1 : Choisir la destination -->
+            <div class="col-lg-4 col-sm-6 text-center pt-4 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="position-relative border border-primary pt-5 pb-4 px-4">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-primary rounded-circle position-absolute top-0 start-50 translate-middle shadow" style="width: 100px; height: 100px;">
+                        <i class="fa fa-map-marker-alt fa-3x text-white"></i>
+                    </div>
+                    <h5 class="mt-4">Choisissez votre destination</h5>
+                    <hr class="w-25 mx-auto bg-primary mb-1">
+                    <hr class="w-50 mx-auto bg-primary mt-0">
+                    <p class="mb-0">Sélectionnez parmi nos destinations tunisiennes : Sidi Bou Saïd, Tozeur, Carthage ou Ain Draham.</p>
+                </div>
+            </div>
+
+            <!-- Étape 2 : Paiement en ligne -->
+            <div class="col-lg-4 col-sm-6 text-center pt-4 wow fadeInUp" data-wow-delay="0.3s">
+                <div class="position-relative border border-primary pt-5 pb-4 px-4">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-primary rounded-circle position-absolute top-0 start-50 translate-middle shadow" style="width: 100px; height: 100px;">
+                        <i class="fa fa-credit-card fa-3x text-white"></i>
+                    </div>
+                    <h5 class="mt-4">Payez en ligne</h5>
+                    <hr class="w-25 mx-auto bg-primary mb-1">
+                    <hr class="w-50 mx-auto bg-primary mt-0">
+                    <p class="mb-0">Réglez facilement et en toute sécurité pour valider votre réservation.</p>
+                </div>
+            </div>
+
+            <!-- Étape 3 : Partez découvrir -->
+            <div class="col-lg-4 col-sm-6 text-center pt-4 wow fadeInUp" data-wow-delay="0.5s">
+                <div class="position-relative border border-primary pt-5 pb-4 px-4">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-primary rounded-circle position-absolute top-0 start-50 translate-middle shadow" style="width: 100px; height: 100px;">
+                        <i class="fa fa-plane fa-3x text-white"></i>
+                    </div>
+                    <h5 class="mt-4">Explorez la Tunisie</h5>
+                    <hr class="w-25 mx-auto bg-primary mb-1">
+                    <hr class="w-50 mx-auto bg-primary mt-0">
+                    <p class="mb-0">Profitez de votre voyage et vivez des expériences inoubliables en Tunisie.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+    <!-- Process Start -->
+
+
+    <!-- Team Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="section-title bg-white text-center text-primary px-3">Partenaire de Voyage</h6>
+            <h1 class="mb-5">Découvrez Nos Partenaires</h1>
+        </div>
+
+        <div class="row g-4"><!-- Partenaire 1 : Four Seasons Gammarth -->
+<div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+    <a href="https://www.fourseasons.com/tunis/" target="_blank" style="text-decoration: none; color: inherit;">
+        <div class="team-item">
+            <div class="overflow-hidden" style="height: 250px; display: flex; justify-content: center; align-items: center;">
+                <img src="img/four.jpg" alt="Four Seasons Gammarth" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+
+            <div class="text-center p-4">
+                <h5 class="mb-0">Four Seasons Gammarth</h5>
+                <small>Hôtel partenaire</small>
+            </div>
+        </div>
+    </a>
+</div>
+
+<!-- Partenaire 3 : Oliver Clinique -->
+<div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+    <a href="https://www.cliniquelesoliviers.net/" target="_blank" style="text-decoration: none; color: inherit;">
+        <div class="team-item">
+            <div class="overflow-hidden" style="height: 250px; display: flex; justify-content: center; align-items: center;">
+                <img src="img/olivier.jpg" alt="Oliver Clinique" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div class="text-center p-4">
+                <h5 class="mb-0">Oliver Clinique</h5>
+                <small>Clinique partenaire</small>
+            </div>
+        </div>
+    </a>
+</div>
+
+<!-- Partenaire 3 : Golf marsa -->
+<div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
+    <a href="https://restaurantlegolfe.com/" target="_blank" style="text-decoration: none; color: inherit;">
+        <div class="team-item">
+            <div class="overflow-hidden" style="height: 250px; display: flex; justify-content: center; align-items: center;">
+                <img src="img/golf.jpg" alt="Wafa Cash" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div class="text-center p-4">
+                <h5 class="mb-0">Golf Marsa</h5>
+                <small>Restaurant partenaire</small>
+            </div>
+        </div>
+    </a>
+</div>
+<!-- Partenaire 4 : Movimpik Sousse -->
+<div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+    <a href="https://movenpick.accor.com/" target="_blank" style="text-decoration: none; color: inherit;">
+        <div class="team-item">
+            <div class="overflow-hidden" style="height: 250px; display: flex; justify-content: center; align-items: center;">
+                <img src="img/mov.jpg" alt="Movimpik Sousse" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div class="text-center p-4">
+                <h5 class="mb-0">Movimpik Sousse</h5>
+                <small>Hôtel partenaire</small>
+            </div>
+        </div>
+    </a>
+</div>
+                  
+        </div>
+    </div>
+</div>
+    <!-- Team End -->
+
+
+    <!-- Testimonial Start -->
+    <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container">
+            
+            <div class="owl-carousel testimonial-carousel position-relative">
+                <div class="testimonial-item bg-white text-center border p-4">
+                    <img class="bg-white rounded-circle shadow p-1 mx-auto mb-3" src="img/testimonial-1.jpg" style="width: 80px; height: 80px;">
+                    <h5 class="mb-0">John Doe</h5>
+                    <p>New York, USA</p>
+                    <p class="mb-0">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum et lorem et sit.</p>
+                </div>
+                <div class="testimonial-item bg-white text-center border p-4">
+                    <img class="bg-white rounded-circle shadow p-1 mx-auto mb-3" src="img/testimonial-2.jpg" style="width: 80px; height: 80px;">
+                    <h5 class="mb-0">John Doe</h5>
+                    <p>New York, USA</p>
+                    <p class="mt-2 mb-0">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum et lorem et sit.</p>
+                </div>
+                <div class="testimonial-item bg-white text-center border p-4">
+                    <img class="bg-white rounded-circle shadow p-1 mx-auto mb-3" src="img/testimonial-3.jpg" style="width: 80px; height: 80px;">
+                    <h5 class="mb-0">John Doe</h5>
+                    <p>New York, USA</p>
+                    <p class="mt-2 mb-0">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum et lorem et sit.</p>
+                </div>
+                <div class="testimonial-item bg-white text-center border p-4">
+                    <img class="bg-white rounded-circle shadow p-1 mx-auto mb-3" src="img/testimonial-4.jpg" style="width: 80px; height: 80px;">
+                    <h5 class="mb-0">John Doe</h5>
+                    <p>New York, USA</p>
+                    <p class="mt-2 mb-0">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum et lorem et sit.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Testimonial End -->
+        
+
+    <!-- Footer Start -->
+   <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <div class="row g-5">
+
+            <!-- À propos -->
+            <div class="col-lg-3 col-md-6">
+                <h4 class="text-white mb-3">À propos</h4>
+                <a class="btn btn-link" href="">Contact</a>
+                <a class="btn btn-link" href="">Politique de confidentialité</a>
+                <a class="btn btn-link" href="">Conditions d'utilisation</a>
+                <a class="btn btn-link" href="">FAQs & Aide</a>
+            </div>
+
+            <!-- Contact -->
+            <div class="col-lg-3 col-md-6">
+                <h4 class="text-white mb-3">Contact</h4>
+                <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Rue, Sousse, Tunisie</p>
+                <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+216 XX XXX XXX</p>
+                <p class="mb-2"><i class="fa fa-envelope me-3"></i>tuneo@gmail.com</p>
+                <div class="d-flex pt-2">
+                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-instagram"></i></a>
+                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <!-- Galerie -->
+            <div class="col-lg-3 col-md-6">
+                <h4 class="text-white mb-3">Galerie</h4>
+                <div class="row g-2 pt-2">
+                    <div class="col-4">
+                        <img class="img-fluid bg-light p-1" src="img/djem.jpg" alt="Site touristique">
+                    </div>
+                    <div class="col-4">
+                        <img class="img-fluid bg-light p-1" src="img/Sidi-Bou-Said.jpg" alt="Site touristique">
+                    </div>
+                    <div class="col-4">
+                        <img class="img-fluid bg-light p-1" src="img/aiin-draham.jpg" alt="Site touristique">
+                    </div>
+                    <div class="col-4">
+                        <img class="img-fluid bg-light p-1" src="img/cart.jpg" alt="Site touristique">
+                    </div>
+                    <div class="col-4">
+                        <img class="img-fluid bg-light p-1" src="img/sousse.jpg" alt="Site touristique">
+                    </div>
+                    <div class="col-4">
+                        <img class="img-fluid bg-light p-1" src="img/djerba.jpg" alt="Site touristique">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="container">
+        <div class="copyright">
+            <div class="row">
+                <
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="footer-menu">
+                        <a href="">Accueil</a>
+                        <a href="">Cookies</a>
+                        <a href="">Aide</a>
+                        <a href="">FAQs</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- Footer End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>

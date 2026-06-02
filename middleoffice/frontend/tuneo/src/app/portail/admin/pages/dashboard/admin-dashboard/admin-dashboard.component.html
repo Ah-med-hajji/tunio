@@ -1,0 +1,130 @@
+<div class="p-6 space-y-6">
+  <header class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Tableau de bord</h1>
+      <p class="text-sm text-gray-500 mt-1">Vue d'ensemble de la plateforme Tunéo.</p>
+    </div>
+  </header>
+
+  @if (loading) {
+    <div class="rounded-lg border border-gray-200 bg-white p-8 text-center text-gray-500 dark:bg-gray-900 dark:border-gray-800">
+      Chargement des statistiques…
+    </div>
+  } @else if (error) {
+    <div class="rounded-lg border border-rose-200 bg-rose-50 p-4 text-rose-700">
+      {{ error }}
+    </div>
+  } @else if (stats) {
+    <!-- KPI cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+      <div class="kpi-card">
+        <span class="kpi-label">Utilisateurs</span>
+        <span class="kpi-value">{{ stats.usersCount | number }}</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Places</span>
+        <span class="kpi-value">{{ stats.placesCount | number }}</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Réservations</span>
+        <span class="kpi-value">{{ stats.reservationsCount | number }}</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Revenu (TND)</span>
+        <span class="kpi-value">{{ stats.revenueTnd | number:'1.0-3' }}</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Demandes en attente</span>
+        <span class="kpi-value">{{ stats.pendingDemandes | number }}</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Partenaires actifs</span>
+        <span class="kpi-value">{{ stats.activePartners | number }}</span>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div class="lg:col-span-2 chart-card">
+        <h2 class="chart-title">Réservations par mois</h2>
+        <apx-chart
+          [chart]="monthlyReservationsOptions.chart!"
+          [series]="monthlyReservationsOptions.series!"
+          [xaxis]="monthlyReservationsOptions.xaxis!"
+          [dataLabels]="monthlyReservationsOptions.dataLabels!"
+          [colors]="monthlyReservationsOptions.colors!"
+          [plotOptions]="monthlyReservationsOptions.plotOptions!"
+          [grid]="monthlyReservationsOptions.grid!"
+        ></apx-chart>
+      </div>
+      <div class="chart-card">
+        <h2 class="chart-title">Statut des réservations</h2>
+        <apx-chart
+          [chart]="statusBreakdownOptions.chart!"
+          [series]="statusBreakdownOptions.series!"
+          [labels]="statusBreakdownOptions.labels!"
+          [colors]="statusBreakdownOptions.colors!"
+          [legend]="statusBreakdownOptions.legend!"
+          [dataLabels]="statusBreakdownOptions.dataLabels!"
+        ></apx-chart>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h2 class="chart-title">Revenu (TND) — 12 derniers mois</h2>
+      <apx-chart
+        [chart]="revenueTrendOptions.chart!"
+        [series]="revenueTrendOptions.series!"
+        [xaxis]="revenueTrendOptions.xaxis!"
+        [colors]="revenueTrendOptions.colors!"
+        [stroke]="revenueTrendOptions.stroke!"
+        [dataLabels]="revenueTrendOptions.dataLabels!"
+        [fill]="revenueTrendOptions.fill!"
+        [grid]="revenueTrendOptions.grid!"
+      ></apx-chart>
+    </div>
+
+    <!-- Recent reservations -->
+    <div class="rounded-lg border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800">
+      <div class="px-5 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
+        <h2 class="text-base font-semibold text-gray-900 dark:text-white">Réservations récentes</h2>
+        <span class="text-xs text-gray-500">10 dernières</span>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead class="bg-gray-50 dark:bg-gray-800 text-gray-500">
+            <tr>
+              <th class="px-4 py-3 text-left">#</th>
+              <th class="px-4 py-3 text-left">Place</th>
+              <th class="px-4 py-3 text-left">Période</th>
+              <th class="px-4 py-3 text-left">Personnes</th>
+              <th class="px-4 py-3 text-left">Statut</th>
+              <th class="px-4 py-3 text-left">Créée le</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            @for (r of stats.recentReservations; track r.id) {
+              <tr>
+                <td class="px-4 py-3 font-medium">#{{ r.id }}</td>
+                <td class="px-4 py-3">{{ r.placeName || '—' }}</td>
+                <td class="px-4 py-3 whitespace-nowrap">
+                  {{ r.startDate | date:'dd/MM/yyyy' }} → {{ r.endDate | date:'dd/MM/yyyy' }}
+                </td>
+                <td class="px-4 py-3">{{ r.numberOfPeople }}</td>
+                <td class="px-4 py-3">
+                  <span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium"
+                        [ngClass]="statusClass(r.status)">
+                    {{ statusLabel(r.status) }}
+                  </span>
+                </td>
+                <td class="px-4 py-3 text-gray-500">{{ r.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+              </tr>
+            } @empty {
+              <tr><td colspan="6" class="px-4 py-6 text-center text-gray-400">Aucune réservation pour le moment.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>

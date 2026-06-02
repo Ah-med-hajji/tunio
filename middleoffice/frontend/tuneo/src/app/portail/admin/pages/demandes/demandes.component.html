@@ -1,0 +1,111 @@
+<!-- Header -->
+<div class="p-6">
+  <h1 class="text-2xl font-bold text-gray-800 mb-6">📋 Demandes d'ajout de lieu</h1>
+
+  <!-- Filtres -->
+  <div class="flex gap-2 mb-6">
+    <button (click)="setFilter('ALL')"
+      [class.bg-blue-600]="filter === 'ALL'" [class.text-white]="filter === 'ALL'"
+      class="px-4 py-2 rounded-lg border text-sm font-medium transition">
+      Toutes ({{ demandes.length }})
+    </button>
+    <button (click)="setFilter('PENDING')"
+      [class.bg-yellow-500]="filter === 'PENDING'" [class.text-white]="filter === 'PENDING'"
+      class="px-4 py-2 rounded-lg border text-sm font-medium transition">
+      ⏳ En attente ({{ demandes | json | slice:0:0 }}{{ (demandes | slice:0:demandes.length) | json | slice:0:0 }}{{ demandes.length }})
+    </button>
+    <button (click)="setFilter('ACCEPTED')"
+      [class.bg-green-500]="filter === 'ACCEPTED'" [class.text-white]="filter === 'ACCEPTED'"
+      class="px-4 py-2 rounded-lg border text-sm font-medium transition">
+      ✅ Acceptées
+    </button>
+    <button (click)="setFilter('REFUSED')"
+      [class.bg-red-500]="filter === 'REFUSED'" [class.text-white]="filter === 'REFUSED'"
+      class="px-4 py-2 rounded-lg border text-sm font-medium transition">
+      ❌ Refusées
+    </button>
+  </div>
+
+  <!-- Table -->
+  <div class="bg-white rounded-xl shadow overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+        <tr>
+          <th class="px-4 py-3 text-left">Image</th>
+          <th class="px-4 py-3 text-left">Nom</th>
+          <th class="px-4 py-3 text-left">Catégorie</th>
+          <th class="px-4 py-3 text-left">Client</th>
+          <th class="px-4 py-3 text-left">Adresse</th>
+          <th class="px-4 py-3 text-left">Statut</th>
+          <th class="px-4 py-3 text-left">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <tr *ngFor="let d of filteredDemandes" class="hover:bg-gray-50 transition">
+
+          <!-- Image -->
+          <td class="px-4 py-3">
+            <img *ngIf="d.imageUrl" [src]="d.imageUrl"
+              class="w-14 h-14 object-cover rounded-lg" alt="image">
+            <div *ngIf="!d.imageUrl"
+              class="w-14 h-14 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 text-xs">
+              N/A
+            </div>
+          </td>
+
+          <!-- Nom -->
+          <td class="px-4 py-3">
+            <p class="font-semibold text-gray-800">{{ d.name }}</p>
+            <p class="text-gray-400 text-xs">{{ d.description | slice:0:50 }}...</p>
+          </td>
+
+          <!-- Catégorie -->
+          <td class="px-4 py-3 text-gray-600">{{ d.categorie?.name }}</td>
+
+          <!-- Client -->
+          <td class="px-4 py-3 text-gray-600">{{ d.clientUsername || '—' }}</td>
+
+          <!-- Adresse -->
+          <td class="px-4 py-3 text-gray-600">{{ d.address || '—' }}</td>
+
+          <!-- Statut -->
+          <td class="px-4 py-3">
+            <span [class]="'px-2 py-1 rounded-full text-xs font-semibold ' + getBadgeClass(d.statut)">
+              {{ d.statut }}
+            </span>
+          </td>
+
+          <!-- Actions -->
+          <td class="px-4 py-3">
+            <div class="flex gap-2">
+              <!-- Accepter -->
+              <button *ngIf="d.statut === 'PENDING'"
+                (click)="accept(d.id!)"
+                class="px-3 py-1 bg-green-500 text-white text-xs rounded-lg hover:bg-green-600 transition">
+                ✅ Accepter
+              </button>
+              <!-- Refuser -->
+              <button *ngIf="d.statut === 'PENDING'"
+                (click)="refuse(d.id!)"
+                class="px-3 py-1 bg-red-500 text-white text-xs rounded-lg hover:bg-red-600 transition">
+                ❌ Refuser
+              </button>
+              <!-- Supprimer -->
+              <button (click)="delete(d.id!)"
+                class="px-3 py-1 bg-gray-400 text-white text-xs rounded-lg hover:bg-gray-500 transition">
+                🗑️
+              </button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Aucune demande -->
+        <tr *ngIf="filteredDemandes.length === 0">
+          <td colspan="7" class="text-center py-10 text-gray-400">
+            Aucune demande trouvée.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

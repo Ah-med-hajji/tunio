@@ -1,0 +1,181 @@
+<!-- LOADING -->
+<div *ngIf="isLoading" style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0f0f1a;">
+  <div style="text-align:center;">
+    <div style="font-size:40px;">⏳</div>
+    <p style="color:#94a3b8;margin-top:12px;font-family:Inter,sans-serif;">Chargement...</p>
+  </div>
+</div>
+
+<!-- SUCCÈS FINAL -->
+<div *ngIf="success" style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f0f1a,#1e1e2e);">
+  <div style="text-align:center;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:56px 48px;box-shadow:0 16px 48px rgba(0,0,0,0.5);max-width:480px;width:90%;">
+    <div style="font-size:72px;margin-bottom:16px;">🎉</div>
+    <h2 style="color:#f8fafc;font-size:26px;font-weight:700;margin-bottom:8px;font-family:Inter,sans-serif;">Réservation confirmée !</h2>
+    <p style="color:#94a3b8;margin-bottom:4px;font-family:Inter,sans-serif;">Votre réservation et votre paiement ont été enregistrés.</p>
+    <p style="color:#64748b;font-size:13px;font-family:Inter,sans-serif;">Redirection vers l'accueil...</p>
+  </div>
+</div>
+
+<!-- FORMULAIRE PRINCIPAL -->
+<div *ngIf="!isLoading && !success" style="min-height:100vh;background:linear-gradient(135deg,#0f0f1a 0%,#1e1e2e 100%);padding:32px 16px;font-family:Inter,sans-serif;">
+  <div style="max-width:1000px;margin:0 auto;">
+
+    <!-- Bouton retour -->
+    <button (click)="goBack()"
+      style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#94a3b8;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:14px;margin-bottom:28px;transition:all 0.2s;">
+      ← Retour
+    </button>
+
+    <div style="display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:start;">
+
+      <!-- ====== COL GAUCHE : Formulaire de réservation ====== -->
+      <div *ngIf="!showPayment">
+        <h1 style="color:#f8fafc;font-size:28px;font-weight:700;margin:0 0 6px;">
+          {{ place?.name || 'Réservation' }}
+        </h1>
+        <p *ngIf="place?.address" style="color:#94a3b8;font-size:14px;margin:0 0 28px;">
+          📍 {{ place?.address }}
+        </p>
+
+        <!-- Dates -->
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;margin-bottom:16px;">
+          <h3 style="color:#e2e8f0;font-size:16px;font-weight:600;margin:0 0 16px;">📅 Sélection des dates</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div>
+              <label style="color:#94a3b8;font-size:12px;display:block;margin-bottom:6px;">Arrivée</label>
+              <input type="datetime-local"
+                [(ngModel)]="reservation.startDate"
+                [min]="today"
+                (change)="onStartDateChange()"
+                style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#e2e8f0;padding:10px 12px;border-radius:8px;font-size:14px;box-sizing:border-box;"/>
+            </div>
+            <div>
+              <label style="color:#94a3b8;font-size:12px;display:block;margin-bottom:6px;">Départ</label>
+              <input type="datetime-local"
+                [(ngModel)]="reservation.endDate"
+                [min]="minEndDate"
+                (change)="onEndDateChange()"
+                style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#e2e8f0;padding:10px 12px;border-radius:8px;font-size:14px;box-sizing:border-box;"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chambres -->
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;margin-bottom:16px;">
+          <h3 style="color:#e2e8f0;font-size:16px;font-weight:600;margin:0 0 16px;">🛏️ Nombre de chambres</h3>
+          <input type="number" min="1"
+            [(ngModel)]="reservation.numberOfPeople"
+            [max]="availableCapacity || 10"
+            style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#e2e8f0;padding:10px 12px;border-radius:8px;font-size:14px;box-sizing:border-box;"/>
+
+          <!-- Capacité disponible -->
+          <div *ngIf="!capacityLoading && totalCapacity > 0" style="margin-top:10px;">
+            <span style="font-size:13px;color:#4ade80;">✅ {{ availableCapacity }} / {{ totalCapacity }} disponible(s)</span>
+          </div>
+          <div *ngIf="capacityLoading" style="margin-top:10px;color:#94a3b8;font-size:13px;">⏳ Vérification...</div>
+        </div>
+
+        <!-- Demandes spéciales -->
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;margin-bottom:16px;">
+          <h3 style="color:#e2e8f0;font-size:16px;font-weight:600;margin:0 0 16px;">💬 Demandes spéciales</h3>
+          <textarea [(ngModel)]="reservation.specialRequests" rows="3"
+            placeholder="Allergies, préférences, horaire d'arrivée..."
+            style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#e2e8f0;padding:10px 12px;border-radius:8px;font-size:14px;resize:vertical;box-sizing:border-box;"></textarea>
+        </div>
+
+        <!-- Erreur -->
+        <div *ngIf="errorMessage" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:12px 16px;color:#fca5a5;font-size:13px;margin-bottom:14px;">
+          ⚠️ {{ errorMessage }}
+        </div>
+      </div>
+
+      <!-- ====== COL GAUCHE (mode paiement) ====== -->
+      <div *ngIf="showPayment">
+        <button (click)="showPayment = false"
+          style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#94a3b8;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:14px;margin-bottom:20px;">
+          ← Modifier la réservation
+        </button>
+
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;">
+          <h3 style="color:#e2e8f0;font-size:16px;font-weight:600;margin:0 0 16px;">📋 Récapitulatif</h3>
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+            <span style="color:#94a3b8;font-size:14px;">Arrivée</span>
+            <span style="color:#e2e8f0;font-size:14px;">{{ reservation.startDate | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+            <span style="color:#94a3b8;font-size:14px;">Départ</span>
+            <span style="color:#e2e8f0;font-size:14px;">{{ reservation.endDate | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+            <span style="color:#94a3b8;font-size:14px;">Nuits</span>
+            <span style="color:#e2e8f0;font-size:14px;">{{ getNights() }}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+            <span style="color:#94a3b8;font-size:14px;">Chambres</span>
+            <span style="color:#e2e8f0;font-size:14px;">{{ reservation.numberOfPeople }}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+            <span style="color:#94a3b8;font-size:14px;">Prix / nuit</span>
+            <span style="color:#e2e8f0;font-size:14px;">{{ pricePerNight }} DT</span>
+          </div>
+          <div style="border-top:1px solid rgba(255,255,255,0.08);margin:12px 0;"></div>
+          <div style="display:flex;justify-content:space-between;">
+            <span style="color:#f8fafc;font-size:16px;font-weight:700;">Total</span>
+            <span style="color:#a78bfa;font-size:20px;font-weight:700;">{{ getTotalPrice() }} DT</span>
+          </div>
+        </div>
+
+        <!-- Erreur paiement -->
+        <div *ngIf="errorMessage" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:12px 16px;color:#fca5a5;font-size:13px;margin-top:14px;">
+          ⚠️ {{ errorMessage }}
+        </div>
+      </div>
+
+      <!-- ====== COL DROITE : Résumé + Bouton / Stripe ====== -->
+      <div>
+
+        <!-- Résumé prix (avant paiement) -->
+        <div *ngIf="!showPayment"
+          style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;margin-bottom:16px;">
+          <h3 style="color:#e2e8f0;font-size:16px;font-weight:600;margin:0 0 16px;">💰 Résumé du prix</h3>
+          <div *ngIf="getNights() > 0">
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <span style="color:#94a3b8;font-size:14px;">{{ pricePerNight }}DT × {{ getNights() }} nuit(s)</span>
+              <span style="color:#e2e8f0;font-size:14px;">{{ pricePerNight * getNights() }} DT</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <span style="color:#94a3b8;font-size:14px;">× {{ reservation.numberOfPeople }} chambre(s)</span>
+              <span style="color:#e2e8f0;font-size:14px;"></span>
+            </div>
+            <div style="border-top:1px solid rgba(255,255,255,0.08);margin:12px 0;"></div>
+            <div style="display:flex;justify-content:space-between;">
+              <span style="color:#f8fafc;font-size:16px;font-weight:700;">Total</span>
+              <span style="color:#a78bfa;font-size:22px;font-weight:700;">{{ getTotalPrice() }} DT</span>
+            </div>
+          </div>
+          <div *ngIf="getNights() === 0" style="color:#64748b;font-size:13px;text-align:center;padding:8px 0;">
+            Sélectionnez des dates pour voir le prix
+          </div>
+        </div>
+
+        <!-- Bouton "Procéder au paiement" -->
+        <button *ngIf="!showPayment"
+          (click)="goToPayment()"
+          id="go-to-payment-btn"
+          style="width:100%;background:linear-gradient(135deg,#635bff,#8b5cf6);color:white;border:none;border-radius:14px;padding:16px;font-size:17px;font-weight:600;cursor:pointer;transition:all 0.3s;box-shadow:0 4px 20px rgba(99,91,255,0.3);">
+          🔒 Procéder au paiement
+        </button>
+
+        <!-- Composant Stripe (affiché après validation) -->
+        <app-stripe-payment
+          *ngIf="showPayment"
+          [amount]="paymentAmountCents"
+          [description]="'Réservation ' + (place?.name || 'TUNÉO')"
+          (paymentDone)="onPaymentSuccess($event)"
+          (paymentFailed)="onPaymentFailed($event)">
+        </app-stripe-payment>
+
+      </div>
+    </div>
+  </div>
+</div>

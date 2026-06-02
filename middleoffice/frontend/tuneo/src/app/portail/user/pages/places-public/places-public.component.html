@@ -1,0 +1,616 @@
+<!-- VUE LISTE -->
+<div *ngIf="!showDetail" class="pp-page">
+  <div class="pp-container" style="max-width:1100px;">
+
+    <button (click)="goHome()" class="btn-back">← Retour à la page d'accueil</button>
+
+    <div style="background:linear-gradient(135deg,#86B817,#5a8a0a);color:#fff;border-radius:14px;padding:20px 28px;margin-bottom:28px;display:flex;align-items:center;gap:14px;">
+      <span style="font-size:26px;">🔍</span>
+      <div>
+        <div style="font-size:18px;font-weight:700;">
+          Résultats
+          <span *ngIf="searchParams.category"> · {{ searchParams.category }}</span>
+          <span *ngIf="searchParams.region"> · {{ searchParams.region }}</span>
+          <span *ngIf="searchParams.delegation"> · {{ searchParams.delegation }}</span>
+        </div>
+        <div style="font-size:13px;opacity:.85;margin-top:3px;">
+          {{ places.length }} lieu{{ places.length > 1 ? 'x' : '' }} trouvé{{ places.length > 1 ? 's' : '' }}
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" style="text-align:center;padding:60px 0;">
+      <div style="font-size:40px;margin-bottom:12px;">⏳</div>
+      <p style="color:#6b7280;font-size:15px;">Chargement des résultats...</p>
+    </div>
+
+    <div *ngIf="!isLoading && places.length === 0"
+         style="text-align:center;padding:80px 0;background:#fff;border-radius:16px;">
+      <div style="font-size:50px;margin-bottom:16px;">🔎</div>
+      <p style="font-size:18px;font-weight:600;color:#374151;">Aucun résultat trouvé</p>
+      <p style="color:#9ca3af;margin-top:6px;">Essayez avec d'autres critères de recherche</p>
+      <button (click)="goBack()" class="btn-green" style="margin-top:20px;">Nouvelle recherche</button>
+    </div>
+
+    <div *ngIf="!isLoading && places.length > 0"
+         style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;">
+      <div *ngFor="let p of places" class="place-card">
+        <div class="place-card-img">
+          <img [src]="p.imageUrl || 'assets/placeholder.jpg'" [alt]="p.name">
+          <span class="place-badge">{{ p.categorie?.name }}</span>
+          <span *ngIf="p.stars" class="place-stars">{{ '★'.repeat(p.stars) }}</span>
+        </div>
+        <div class="place-body">
+          <h3 style="font-size:17px;font-weight:700;color:#1f2937;margin:0 0 6px;">{{ p.name }}</h3>
+          <p *ngIf="p.address" style="font-size:13px;color:#6b7280;margin:0 0 4px;">📍 {{ p.address }}</p>
+          <p *ngIf="p.openingHours" style="font-size:13px;color:#6b7280;margin:0 0 4px;">🕐 {{ p.openingHours }}</p>
+          <p *ngIf="p.phone" style="font-size:13px;color:#6b7280;margin:0 0 10px;">📞 {{ p.phone }}</p>
+          <div *ngIf="p.priceSingle || p.priceDouble" class="place-price">
+            <span *ngIf="p.priceSingle" style="font-size:13px;color:#15803d;font-weight:600;">Simple : {{ p.priceSingle }} DT</span>
+            <span *ngIf="p.priceDouble" style="font-size:13px;color:#15803d;font-weight:600;">Double : {{ p.priceDouble }} DT</span>
+          </div>
+          <p *ngIf="p.description"
+             style="font-size:13px;color:#9ca3af;margin:0 0 14px;line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">
+            {{ p.description }}
+          </p>
+          <button (click)="viewDetails(p)" class="btn-green" style="width:100%;border-radius:50px;padding:10px;">Voir plus →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- VUE DÉTAIL -->
+<div *ngIf="showDetail && selectedPlace" class="pp-page">
+  <div class="pp-container">
+
+    <button (click)="closeDetails()" class="btn-back">← Retour aux résultats</button>
+
+    <img [src]="selectedPlace.imageUrl || 'assets/placeholder.jpg'" [alt]="selectedPlace.name"
+         style="width:100%;height:320px;object-fit:cover;border-radius:16px;margin-bottom:24px;box-shadow:0 4px 16px rgba(0,0,0,0.1);">
+
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+      <h1 style="font-size:28px;font-weight:700;color:#1f2937;margin:0;">{{ selectedPlace.name }}</h1>
+      <span class="place-badge" style="position:static;">{{ selectedPlace.categorie?.name }}</span>
+    </div>
+
+    <!-- Infos générales -->
+    <div class="info-card">
+      <h2>ℹ️ Informations générales</h2>
+      <div class="info-grid">
+        <p *ngIf="selectedPlace.address">📍 <strong>Adresse :</strong> {{ selectedPlace.address }}</p>
+        <p *ngIf="selectedPlace.region">🗺️ <strong>Région :</strong> {{ selectedPlace.region }}</p>
+        <p *ngIf="selectedPlace.openingHours">🕐 <strong>Horaires :</strong> {{ selectedPlace.openingHours }}</p>
+        <p *ngIf="selectedPlace.phone">📞 <strong>Téléphone :</strong> {{ selectedPlace.phone }}</p>
+        <p *ngIf="selectedPlace.email">✉️ <strong>Email :</strong> {{ selectedPlace.email }}</p>
+        <p *ngIf="selectedPlace.description" style="grid-column:span 2;">📝 <strong>Description :</strong> {{ selectedPlace.description }}</p>
+        <p *ngIf="selectedPlace.website" style="grid-column:span 2;">
+          🌐 <strong>Site Web :</strong>
+          <a [href]="selectedPlace.website" target="_blank" style="color:#86B817;margin-left:4px;">{{ selectedPlace.website }}</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Détails Hôtel -->
+    <div *ngIf="selectedPlace.stars || selectedPlace.priceSingle || selectedPlace.priceDouble" class="info-card">
+      <h2>🏨 Détails Hôtel</h2>
+      <div class="info-grid">
+        <p *ngIf="selectedPlace.stars">⭐ <strong>Étoiles :</strong> {{ selectedPlace.stars }}</p>
+        <p *ngIf="selectedPlace.roomsSingle">🛏️ <strong>Chambres Simples :</strong> {{ selectedPlace.roomsSingle }}</p>
+        <p *ngIf="selectedPlace.roomsDouble">🛏️ <strong>Chambres Doubles :</strong> {{ selectedPlace.roomsDouble }}</p>
+        <p *ngIf="selectedPlace.priceSingle">💰 <strong>Prix Simple :</strong> {{ selectedPlace.priceSingle }} DT</p>
+        <p *ngIf="selectedPlace.priceDouble">💰 <strong>Prix Double :</strong> {{ selectedPlace.priceDouble }} DT</p>
+        <p *ngIf="selectedPlace.fullBoard">🍽️ <strong>Pension Complète :</strong> Oui</p>
+        <p *ngIf="selectedPlace.halfBoard">🍽️ <strong>Demi-Pension :</strong> Oui</p>
+      </div>
+    </div>
+
+    <!-- Détails Restaurant -->
+    <div *ngIf="selectedPlace.cuisineType || selectedPlace.tableCapacity" class="info-card">
+      <h2>🍽️ Détails Restaurant</h2>
+      <div style="font-size:14px;color:#4b5563;">
+        <p *ngIf="selectedPlace.cuisineType">🍜 <strong>Cuisine :</strong> {{ selectedPlace.cuisineType }}</p>
+        <p *ngIf="selectedPlace.tableCapacity">🪑 <strong>Capacité :</strong> {{ selectedPlace.tableCapacity }} tables</p>
+        <p *ngIf="selectedPlace.deliveryAvailable">🛵 <strong>Livraison :</strong> Disponible</p>
+      </div>
+    </div>
+
+    <!-- Détails Hôpital -->
+    <div *ngIf="selectedPlace.emergencyNumber || selectedPlace.specialties" class="info-card">
+      <h2>🏥 Détails Hôpital</h2>
+      <div style="font-size:14px;color:#4b5563;">
+        <p *ngIf="selectedPlace.emergencyNumber">🚨 <strong>Urgences :</strong> {{ selectedPlace.emergencyNumber }}</p>
+        <p *ngIf="selectedPlace.specialties">🩺 <strong>Spécialités :</strong> {{ selectedPlace.specialties }}</p>
+        <p *ngIf="selectedPlace.open24h">⏰ <strong>Ouvert 24h :</strong> Oui</p>
+      </div>
+    </div>
+
+    <!-- Détails Location Voiture -->
+    <div *ngIf="selectedPlace.pricePerDay || selectedPlace.vehicleCount" class="info-card">
+      <h2>🚗 Détails Location</h2>
+      <div style="font-size:14px;color:#4b5563;">
+        <p *ngIf="selectedPlace.pricePerDay">💰 <strong>Prix / Jour :</strong> {{ selectedPlace.pricePerDay }} DT</p>
+        <p *ngIf="selectedPlace.vehicleCount">🚘 <strong>Véhicules :</strong> {{ selectedPlace.vehicleCount }}</p>
+      </div>
+    </div>
+
+    <!-- Détails Café -->
+    <div *ngIf="selectedPlace.seatingCapacity || selectedPlace.cafePrice" class="info-card">
+      <h2>☕ Détails Café</h2>
+      <div style="font-size:14px;color:#4b5563;">
+        <p *ngIf="selectedPlace.seatingCapacity">🪑 <strong>Places assises :</strong> {{ selectedPlace.seatingCapacity }}</p>
+        <p *ngIf="selectedPlace.cafePrice">💰 <strong>Prix moyen :</strong> {{ selectedPlace.cafePrice }} DT</p>
+      </div>
+    </div>
+
+    <!-- BOUTON D'OUVERTURE -->
+    <div *ngIf="!showReservationForm" class="res-open-card">
+      <div>
+        <p style="font-size:17px;font-weight:600;color:#0f172a;margin:0 0 4px;">Prêt à réserver ?</p>
+        <p style="font-size:13px;color:#94a3b8;margin:0;">Choisissez vos dates et options</p>
+      </div>
+      <button (click)="openReservation()" class="btn-green">📅 Réserver maintenant</button>
+    </div>
+
+    <!-- FORMULAIRE COMPLET -->
+    <div *ngIf="showReservationForm" class="res-card">
+
+      <!-- HEADER -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+        <div>
+          <h3 style="font-size:19px;font-weight:600;color:#0f172a;margin:0 0 3px;">Votre réservation</h3>
+          <p style="font-size:13px;color:#94a3b8;margin:0;">{{ selectedPlace?.name }}</p>
+        </div>
+        <button (click)="closeReservation()" class="btn-close">✕</button>
+      </div>
+
+      <div style="margin-bottom:22px;">
+        <span class="res-label">Période du séjour</span>
+
+        <!-- Indication de l'étape actuelle -->
+        <div style="display:flex;gap:8px;margin-bottom:10px;">
+          <span [style.background]="!reservation.startDate ? '#86B817' : '#e2e8f0'"
+                [style.color]="!reservation.startDate ? '#fff' : '#64748b'"
+                style="padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">
+            1. Arrivée
+          </span>
+          <span [style.background]="reservation.startDate && !reservation.endDate ? '#86B817' : '#e2e8f0'"
+                [style.color]="reservation.startDate && !reservation.endDate ? '#fff' : '#64748b'"
+                style="padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">
+            2. Départ
+          </span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <label style="display:block;font-size:12px;color:#64748b;margin-bottom:6px;">🗓️ Arrivée</label>
+            <input type="datetime-local" [(ngModel)]="reservation.startDate"
+                   [min]="today" class="res-field"
+                   (change)="reservation.endDate = ''; checkCapacity()">
+          </div>
+          <div>
+            <label style="display:block;font-size:12px;color:#64748b;margin-bottom:6px;">🗓️ Départ</label>
+            <input type="datetime-local" [(ngModel)]="reservation.endDate"
+                   [min]="reservation.startDate || today" class="res-field"
+                   [disabled]="!reservation.startDate"
+                   (change)="checkCapacity()">
+          </div>
+        </div>
+
+        <!-- Résumé dates sélectionnées -->
+        <div *ngIf="reservation.startDate && reservation.endDate"
+             style="margin-top:10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:13px;color:#15803d;">✅ {{ getNights() }} nuit(s) sélectionnée(s)</span>
+          <button (click)="reservation.endDate = ''; reservation.startDate = ''; resetCapacity()"
+                  style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:12px;">✕ Effacer</button>
+        </div>
+      </div>
+
+      <!-- ALERTE DATE RÉSERVÉE -->
+      <div *ngIf="reservation.startDate && isDateReserved(reservation.startDate.split('T')[0])"
+           class="res-alert">
+        <span style="font-size:18px;">⚠️</span>
+        <p style="color:#dc2626;font-size:13px;font-weight:600;margin:0;">Cette date est déjà réservée</p>
+      </div>
+
+      <!-- ══ BLOC CAPACITÉ ══ -->
+      <div *ngIf="reservation.startDate" style="margin-bottom:22px;">
+        <span class="res-label">Disponibilité</span>
+
+        <!-- LOADING -->
+        <div *ngIf="capacityLoading"
+             style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;">
+          <div style="width:20px;height:20px;border:2px solid #e2e8f0;border-top-color:#86B817;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;"></div>
+          <span style="font-size:13px;color:#64748b;">Vérification en cours...</span>
+        </div>
+
+        <!-- RÉSULTAT CAPACITÉ -->
+        <div *ngIf="capacityChecked && !capacityLoading"
+             style="border-radius:12px;padding:16px 18px;border:1.5px solid;"
+             [style.background]="isCapacityFull ? '#fef2f2' : capacityPercent <= 20 ? '#fffbeb' : '#f0fdf4'"
+             [style.borderColor]="isCapacityFull ? '#fecaca' : capacityPercent <= 20 ? '#fde68a' : '#bbf7d0'">
+
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <span style="font-size:13px;font-weight:600;"
+                  [style.color]="isCapacityFull ? '#dc2626' : capacityPercent <= 20 ? '#92400e' : '#15803d'">
+              {{ isCapacityFull ? '🔴 Complet' : capacityPercent <= 20 ? '🟡 Presque complet' : '🟢 Places disponibles' }}
+            </span>
+            <span style="font-size:13px;font-weight:700;"
+                  [style.color]="isCapacityFull ? '#dc2626' : '#0f172a'">
+              {{ availableCapacity }} / {{ totalCapacity }}
+            </span>
+          </div>
+
+          <!-- BARRE DE PROGRESSION -->
+          <div style="background:#e2e8f0;border-radius:50px;height:8px;overflow:hidden;">
+            <div [style.width]="capacityPercent + '%'"
+                 [style.background]="capacityColor"
+                 style="height:100%;border-radius:50px;transition:width .4s ease;">
+            </div>
+          </div>
+
+          <!-- MESSAGE COMPLET -->
+          <p *ngIf="isCapacityFull"
+             style="font-size:12px;color:#dc2626;margin:8px 0 0;font-weight:500;">
+            ❌ Cet établissement est complet pour ces dates. Choisissez d'autres dates.
+          </p>
+
+          <!-- MESSAGE DERNIÈRES PLACES -->
+          <p *ngIf="!isCapacityFull && capacityPercent <= 20 && availableCapacity > 0"
+             style="font-size:12px;color:#92400e;margin:8px 0 0;font-weight:500;">
+            ⚠️ Plus que {{ availableCapacity }} place{{ availableCapacity > 1 ? 's' : '' }} disponible{{ availableCapacity > 1 ? 's' : '' }} !
+          </p>
+
+        </div>
+
+      </div>
+      <!-- ══ FIN CAPACITÉ ══ -->
+
+      <!-- VOYAGEURS : hôtels uniquement -->
+      <div *ngIf="selectedCategory.includes('HOTEL')" style="margin-bottom:22px;">
+        <span class="res-label">Voyageurs</span>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:10px;padding:10px 14px;">
+            <p style="font-size:11px;color:#94a3b8;margin:0 0 8px;font-weight:500;">👤 Adultes</p>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <button class="res-counter-btn" (click)="reservation.adults = reservation.adults > 1 ? reservation.adults - 1 : 1">−</button>
+              <span style="font-size:15px;font-weight:700;color:#0f172a;">{{ reservation.adults }}</span>
+              <button class="res-counter-btn plus" (click)="reservation.adults = reservation.adults + 1">+</button>
+            </div>
+          </div>
+          <div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:10px;padding:10px 14px;">
+            <p style="font-size:11px;color:#94a3b8;margin:0 0 8px;font-weight:500;">🧒 Enfants</p>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <button class="res-counter-btn" (click)="reservation.children = reservation.children > 0 ? reservation.children - 1 : 0">−</button>
+              <span style="font-size:15px;font-weight:700;color:#0f172a;">{{ reservation.children }}</span>
+              <button class="res-counter-btn plus" (click)="reservation.children = reservation.children + 1">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HÔTEL : TYPE DE CHAMBRE -->
+      <div *ngIf="selectedCategory.includes('HOTEL')" style="margin-bottom:22px;">
+        <span class="res-label">Type de chambre</span>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="res-option-card" [class.active]="reservation.roomType === 'SINGLE'" (click)="reservation.roomType = 'SINGLE'">
+            <div>
+              <p style="font-size:14px;font-weight:600;color:#0f172a;margin:0 0 2px;">🛏️ Simple</p>
+              <p style="font-size:13px;color:#475569;font-weight:600;margin:0;">{{ selectedPlace?.priceSingle }} DT/nuit</p>
+            </div>
+            <div class="res-radio"></div>
+          </div>
+          <div class="res-option-card" [class.active]="reservation.roomType === 'DOUBLE'" (click)="reservation.roomType = 'DOUBLE'">
+            <div>
+              <p style="font-size:14px;font-weight:600;color:#0f172a;margin:0 0 2px;">🛏️ Double</p>
+              <p style="font-size:13px;color:#475569;font-weight:600;margin:0;">{{ selectedPlace?.priceDouble }} DT/nuit</p>
+            </div>
+            <div class="res-radio"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HÔTEL : PENSION -->
+      <div *ngIf="selectedCategory.includes('HOTEL')" style="margin-bottom:22px;">
+        <span class="res-label">Option pension</span>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="res-option-card" [class.active]="reservation.boardType === 'NONE'" (click)="reservation.boardType = 'NONE'">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:18px;">🚫</span>
+              <p style="font-size:14px;font-weight:500;color:#0f172a;margin:0;">Sans pension</p>
+            </div>
+            <div class="res-radio"></div>
+          </div>
+          <div *ngIf="selectedPlace?.halfBoard" class="res-option-card" [class.active]="reservation.boardType === 'HALF'" (click)="reservation.boardType = 'HALF'">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:18px;">🍽️</span>
+              <p style="font-size:14px;font-weight:500;color:#0f172a;margin:0;">Demi-pension</p>
+            </div>
+            <div class="res-radio"></div>
+          </div>
+          <div *ngIf="selectedPlace?.fullBoard" class="res-option-card" [class.active]="reservation.boardType === 'FULL'" (click)="reservation.boardType = 'FULL'">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:18px;">🍽️🍽️</span>
+              <p style="font-size:14px;font-weight:500;color:#0f172a;margin:0;">Pension complète</p>
+            </div>
+            <div class="res-radio"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESTAURANT / CAFÉ -->
+      <div *ngIf="selectedCategory.includes('RESTAURANT') || selectedCategory.includes('CAFE')" style="margin-bottom:22px;">
+        <span class="res-label">Nombre de convives</span>
+        <div class="res-counter-box" style="display:flex;align-items:center;justify-content:space-between;max-width:220px;">
+          <button class="res-counter-btn" (click)="reservation.adults = reservation.adults > 1 ? reservation.adults - 1 : 1">−</button>
+          <div style="text-align:center;">
+            <span style="font-size:26px;font-weight:700;color:#0f172a;">{{ reservation.adults }}</span>
+            <p style="font-size:11px;color:#94a3b8;margin:0;">personne{{ reservation.adults > 1 ? 's' : '' }}</p>
+          </div>
+          <button class="res-counter-btn plus" (click)="reservation.adults = reservation.adults + 1">+</button>
+        </div>
+      </div>
+
+      <!-- VOITURE -->
+      <div *ngIf="selectedCategory.includes('VOITURE') || selectedCategory.includes('LOCATION')" style="margin-bottom:22px;">
+        <span class="res-label">Options</span>
+        <div class="res-option-card">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="font-size:18px;">🚗</span>
+            <div>
+              <p style="font-size:14px;font-weight:500;color:#0f172a;margin:0;">Avec chauffeur</p>
+              <p style="font-size:12px;color:#94a3b8;margin:0;">Service de conduite inclus</p>
+            </div>
+          </div>
+          <input type="checkbox" [(ngModel)]="reservation.withDriver"
+                 style="width:18px;height:18px;accent-color:#86B817;cursor:pointer;flex-shrink:0;">
+        </div>
+      </div>
+
+      <!-- CALCUL TOTAL -->
+      <div style="margin-bottom:22px;">
+        <button (click)="showTotal = !showTotal"
+                [disabled]="!reservation.startDate"
+                [style.opacity]="!reservation.startDate ? '0.4' : '1'"
+                [style.cursor]="!reservation.startDate ? 'not-allowed' : 'pointer'"
+                style="display:flex;align-items:center;gap:8px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:10px;padding:11px 18px;font-size:13px;font-weight:600;color:#475569;cursor:pointer;transition:all .2s;font-family:'Outfit',sans-serif;width:100%;justify-content:center;"
+                onmouseover="if(!this.disabled){this.style.borderColor='#94a3b8';this.style.background='#f1f5f9';}"
+                onmouseout="this.style.borderColor='#e2e8f0';this.style.background='#f8fafc';">
+          🧮 {{ showTotal ? 'Masquer le calcul' : 'Calculer le total' }}
+        </button>
+
+        <div *ngIf="showTotal && reservation.startDate"
+             style="margin-top:12px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-radius:12px;padding:18px 20px;border:1px solid #bbf7d0;animation:res-slide .25s ease both;">
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
+            <div *ngIf="getNights() > 0" style="display:flex;justify-content:space-between;font-size:13px;color:#475569;">
+              <span>🌙 Nombre de nuits</span>
+              <strong style="color:#0f172a;">{{ getNights() }}</strong>
+            </div>
+            <div *ngIf="getNights() === 0" style="display:flex;justify-content:space-between;font-size:13px;color:#475569;">
+              <span>📅 Date</span>
+              <strong style="color:#0f172a;">{{ reservation.startDate | date:'dd/MM/yyyy HH:mm' }}</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:#475569;">
+              <span>👥 Personnes</span>
+              <strong style="color:#0f172a;">{{ reservation.adults + (reservation.children || 0) }}</strong>
+            </div>
+            <div *ngIf="getTotalPrice() > 0" style="display:flex;justify-content:space-between;font-size:13px;color:#475569;">
+              <span>💰 Prix unitaire</span>
+              <strong style="color:#0f172a;">
+                {{ reservation.roomType === 'SINGLE' ? selectedPlace?.priceSingle :
+                   (selectedPlace?.priceDouble ?? selectedPlace?.pricePerDay ?? selectedPlace?.cafePrice ?? 0) }} DT
+              </strong>
+            </div>
+          </div>
+          <div style="height:1px;background:#bbf7d0;margin-bottom:12px;"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:14px;font-weight:600;color:#15803d;">Total à payer</span>
+            <span *ngIf="getTotalPrice() > 0" style="font-size:28px;font-weight:700;color:#86B817;line-height:1;">
+              {{ getTotalPrice() }} <span style="font-size:14px;">DT</span>
+            </span>
+            <span *ngIf="getTotalPrice() === 0" style="font-size:15px;font-weight:600;color:#86B817;">Sur devis</span>
+          </div>
+        </div>
+
+        <p *ngIf="!reservation.startDate" style="text-align:center;font-size:12px;color:#94a3b8;margin:8px 0 0;">
+          Choisissez une date pour calculer
+        </p>
+      </div>
+
+      <!-- DEMANDE SPÉCIALE -->
+      <div style="margin-bottom:22px;">
+        <span class="res-label">Demande spéciale <span style="text-transform:none;font-weight:400;letter-spacing:0;">(optionnel)</span></span>
+        <textarea [(ngModel)]="reservation.specialRequests"
+                  placeholder="Allergies, préférences, heure d'arrivée tardive..."
+                  rows="3" class="res-field" style="resize:none;"></textarea>
+      </div>
+
+      <!-- BOUTONS -->
+      <div style="display:grid;grid-template-columns:1fr auto;gap:10px;">
+        <button (click)="submitReservation()" class="btn-confirm"
+                [disabled]="isCapacityFull"
+                [style.opacity]="isCapacityFull ? '0.5' : '1'"
+                [style.cursor]="isCapacityFull ? 'not-allowed' : 'pointer'">
+          {{ isCapacityFull ? '❌ Complet' : '✅ Confirmer la réservation' }}
+        </button>
+        <button (click)="closeReservation()" class="btn-cancel">Annuler</button>
+      </div>
+
+    </div>
+
+
+    <!-- CALENDRIER -->
+    <div class="cal-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <button (click)="prevMonth()" class="cal-nav-btn">‹</button>
+        <p style="font-size:16px;font-weight:700;color:#0f172a;margin:0;text-transform:capitalize;">
+          {{ currentMonth | date:'MMMM yyyy' }}
+        </p>
+        <button (click)="nextMonth()" class="cal-nav-btn">›</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px;">
+        <div *ngFor="let j of ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim']" class="cal-header-day">{{ j }}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;">
+        <div *ngFor="let blank of getBlankDays()"></div>
+        <div *ngFor="let day of calendarDays"
+             class="cal-day-btn"
+             [class.cal-reserved]="isReserved(day)"
+             [class.cal-selected]="isSelectedDay(day) || isEndDay(day)"
+             [class.cal-past]="isPast(day)"
+             (click)="onCalendarDayClick(day)"
+             [title]="isReserved(day) ? 'Date indisponible' : isPast(day) ? 'Date dépassée' : !reservation.startDate ? 'Cliquer pour définir l\'arrivée' : !reservation.endDate ? 'Cliquer pour définir le départ' : 'Modifier les dates'">
+          {{ day.getDate() }}
+        </div>
+      </div>
+      <div class="cal-legend">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="cal-legend-dot" style="background:linear-gradient(135deg,#ef4444,#dc2626);"></div>
+          <span style="font-size:11px;color:#94a3b8;font-weight:500;">Indisponible</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="cal-legend-dot" style="background:linear-gradient(135deg,#86B817,#5a8a0a);"></div>
+          <span style="font-size:11px;color:#94a3b8;font-weight:500;">Sélectionné</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="cal-legend-dot" style="background:#f8fafc;border:1.5px solid #e2e8f0;opacity:.4;"></div>
+          <span style="font-size:11px;color:#94a3b8;font-weight:500;">Passé</span>
+        </div>
+        <div *ngIf="disabledDates.length > 0" class="cal-legend-count">
+          {{ disabledDates.length }} date{{ disabledDates.length > 1 ? 's' : '' }} réservée{{ disabledDates.length > 1 ? 's' : '' }}
+        </div>
+        <!-- Instruction calendrier -->
+        <div style="margin-top:8px;font-size:12px;color:#64748b;text-align:center;width:100%;">
+          <span *ngIf="!reservation.startDate">👆 Cliquez pour choisir la date d'arrivée</span>
+          <span *ngIf="reservation.startDate && !reservation.endDate">👆 Cliquez pour choisir la date de départ</span>
+          <span *ngIf="reservation.startDate && reservation.endDate">✅ Dates sélectionnées — cliquez pour modifier</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- MODAL STRIPE PAIEMENT                                        -->
+<!-- ============================================================ -->
+<div *ngIf="showPaymentModal"
+     style="position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(8px);">
+
+  <div style="background:#0f172a;border-radius:24px;width:100%;max-width:500px;max-height:92vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,0.7);border:1px solid rgba(134,184,23,0.2);position:relative;">
+
+    <!-- Bande décorative verte en haut -->
+    <div style="height:4px;background:linear-gradient(90deg,#86B817,#5a8a0a,#86B817);border-radius:24px 24px 0 0;"></div>
+
+    <!-- Header modal -->
+    <div style="padding:28px 28px 0;display:flex;justify-content:space-between;align-items:flex-start;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:48px;height:48px;background:rgba(134,184,23,0.15);border:1.5px solid rgba(134,184,23,0.4);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;">
+          💳
+        </div>
+        <div>
+          <h2 style="font-size:19px;font-weight:700;color:#f8fafc;margin:0 0 3px;font-family:'Outfit',sans-serif;letter-spacing:-0.3px;">Paiement sécurisé</h2>
+          <p style="font-size:12px;color:#64748b;margin:0;display:flex;align-items:center;gap:5px;">
+            <span style="color:#86B817;">🔒</span> SSL · Stripe · Données chiffrées
+          </p>
+        </div>
+      </div>
+      <button (click)="closePaymentModal()"
+              style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:#64748b;width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;"
+              onmouseover="this.style.background='rgba(239,68,68,0.15)';this.style.borderColor='rgba(239,68,68,0.3)';this.style.color='#ef4444';"
+              onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.borderColor='rgba(255,255,255,0.08)';this.style.color='#64748b';">
+        ✕
+      </button>
+    </div>
+
+    <!-- Nom établissement -->
+    <div style="padding:12px 28px 0;">
+      <p style="font-size:13px;color:#86B817;font-weight:600;margin:0;">{{ selectedPlace?.name }}</p>
+    </div>
+
+    <!-- Séparateur -->
+    <div style="margin:20px 28px 0;height:1px;background:rgba(255,255,255,0.06);"></div>
+
+    <!-- Récapitulatif -->
+    <div style="margin:20px 28px 0;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:20px;overflow:hidden;position:relative;">
+
+      <!-- Titre section -->
+      <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#475569;margin:0 0 16px;">Récapitulatif de réservation</p>
+
+      <!-- Lignes détails -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:13px;color:#64748b;display:flex;align-items:center;gap:7px;">
+            <span style="font-size:14px;">📅</span> Arrivée
+          </span>
+          <span style="font-size:13px;font-weight:600;color:#e2e8f0;">{{ reservation.startDate | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:13px;color:#64748b;display:flex;align-items:center;gap:7px;">
+            <span style="font-size:14px;">📅</span> Départ
+          </span>
+          <span style="font-size:13px;font-weight:600;color:#e2e8f0;">{{ reservation.endDate | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:13px;color:#64748b;display:flex;align-items:center;gap:7px;">
+            <span style="font-size:14px;">🌙</span> Durée
+          </span>
+          <span style="font-size:13px;font-weight:600;color:#e2e8f0;">{{ getNights() }} nuit(s)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:13px;color:#64748b;display:flex;align-items:center;gap:7px;">
+            <span style="font-size:14px;">👥</span> Personnes
+          </span>
+          <span style="font-size:13px;font-weight:600;color:#e2e8f0;">{{ reservation.adults + (reservation.children || 0) }}</span>
+        </div>
+      </div>
+
+      <!-- Séparateur avec motif -->
+      <div style="margin:16px 0;border-top:1px dashed rgba(134,184,23,0.25);"></div>
+
+      <!-- Total -->
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:14px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;">Total à payer</span>
+        <div style="text-align:right;">
+          <span style="font-size:30px;font-weight:800;color:#86B817;line-height:1;font-family:'Outfit',sans-serif;">
+            {{ paymentAmountCents / 1000 | number:'1.3-3' }}
+          </span>
+          <span style="font-size:14px;font-weight:600;color:#5a8a0a;margin-left:4px;">DT</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Badges sécurité -->
+    <div style="margin:16px 28px 0;display:flex;gap:8px;flex-wrap:wrap;">
+      <span style="background:rgba(134,184,23,0.08);border:1px solid rgba(134,184,23,0.2);color:#86B817;font-size:10px;font-weight:600;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:4px;">
+        🔒 Paiement sécurisé
+      </span>
+      <span style="background:rgba(134,184,23,0.08);border:1px solid rgba(134,184,23,0.2);color:#86B817;font-size:10px;font-weight:600;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:4px;">
+        ✅ Confirmation immédiate
+      </span>
+      <span style="background:rgba(134,184,23,0.08);border:1px solid rgba(134,184,23,0.2);color:#86B817;font-size:10px;font-weight:600;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:4px;">
+        📄 Facture PDF
+      </span>
+    </div>
+
+    <!-- Séparateur -->
+    <div style="margin:20px 28px 0;height:1px;background:rgba(255,255,255,0.06);"></div>
+
+    <!-- Composant Stripe Elements -->
+    <div style="padding:20px 28px 28px;">
+      <app-stripe-payment
+        [amount]="paymentAmountCents"
+        [description]="'Réservation ' + (selectedPlace?.name || 'TUNÉO')"
+        (paymentDone)="onPaymentSuccess($event)"
+        (paymentFailed)="onPaymentFailed($event)">
+      </app-stripe-payment>
+    </div>
+
+  </div>
+</div>
+
+<app-chatbot></app-chatbot>
+

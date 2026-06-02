@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_tuneo
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: visite
+      MYSQL_USER: visite
+      MYSQL_PASSWORD: visite123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - tuneo-network
+
+  keycloak:
+    container_name: brave_feistel
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: password
+    command:
+      - start-dev
+    ports:
+      - "9090:8080"
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    networks:
+      - tuneo-network
+    depends_on:
+      - mysql
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tuneo_backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/visite?useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: visite
+      SPRING_DATASOURCE_PASSWORD: visite123
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/tuneo-realm
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql
+      - keycloak
+    networks:
+      - tuneo-network
+
+volumes:
+  mysql_data:
+  keycloak_data:
+
+networks:
+  tuneo-network:

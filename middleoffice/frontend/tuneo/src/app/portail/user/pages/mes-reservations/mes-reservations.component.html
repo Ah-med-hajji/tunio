@@ -1,0 +1,148 @@
+<div class="p-6 max-w-6xl mx-auto space-y-6">
+  <header class="flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Mes réservations</h1>
+      <p class="text-sm text-gray-500 mt-1">
+        Gérez vos réservations en cours. Les réservations confirmées ne peuvent plus être modifiées.
+      </p>
+    </div>
+    <a routerLink="/historique" class="text-sm text-emerald-600 hover:text-emerald-700">
+      Voir l'historique complet →
+    </a>
+  </header>
+
+  @if (loading) {
+    <div class="rounded-lg border border-gray-200 bg-white p-8 text-center text-gray-500 dark:bg-gray-900 dark:border-gray-800">
+      Chargement…
+    </div>
+  } @else if (error) {
+    <div class="rounded-lg border border-rose-200 bg-rose-50 p-4 text-rose-700">{{ error }}</div>
+  } @else if (reservations.length === 0) {
+    <div class="rounded-lg border border-gray-200 bg-white p-8 text-center text-gray-500 dark:bg-gray-900 dark:border-gray-800">
+      Vous n'avez pas encore de réservation.
+      <a routerLink="/user/homepage" class="text-emerald-600 hover:underline">Découvrez des lieux</a>.
+    </div>
+  } @else {
+    <ul class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      @for (r of reservations; track r.id) {
+        <li class="reservation-card">
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex items-start gap-3 min-w-0">
+              @if (r.place?.imageUrl) {
+                <img [src]="r.place!.imageUrl" alt="" class="w-14 h-14 rounded-md object-cover" />
+              } @else {
+                <div class="w-14 h-14 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center font-semibold">
+                  {{ r.place?.name?.charAt(0) || 'R' }}
+                </div>
+              }
+              <div class="min-w-0">
+                <div class="font-medium text-gray-900 dark:text-white truncate">
+                  {{ r.place?.name || '—' }}
+                </div>
+                <div class="text-xs text-gray-500">
+                  {{ r.place?.region || r.place?.address || '' }}
+                </div>
+                <div class="text-xs text-gray-500 mt-1">#{{ r.id }} · {{ r.numberOfPeople }} pers.</div>
+              </div>
+            </div>
+            <span class="badge" [ngClass]="statusClass(r.status)">{{ statusLabel(r.status) }}</span>
+          </div>
+
+          <div class="text-sm text-gray-700 dark:text-gray-300">
+            {{ r.startDate | date:'EEE d MMM y, HH:mm' }} → {{ r.endDate | date:'EEE d MMM y, HH:mm' }}
+          </div>
+
+          @if (r.specialRequests) {
+            <div class="text-xs text-gray-500 italic">"{{ r.specialRequests }}"</div>
+          }
+
+          <div class="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-gray-100 dark:border-gray-800">
+            <button class="btn-ghost-sm" (click)="download(r)">📄 PDF</button>
+            <button
+              class="btn-secondary-sm"
+              (click)="startEdit(r)"
+              [disabled]="!canEdit(r) || busyId === r.id"
+            >
+              Modifier
+            </button>
+            <button
+              class="btn-danger-sm"
+              (click)="cancel(r)"
+              [disabled]="!canCancel(r) || busyId === r.id"
+            >
+              {{ busyId === r.id ? '…' : 'Annuler' }}
+            </button>
+          </div>
+        </li>
+      }
+    </ul>
+
+    <!-- Edit modal -->
+    @if (editing) {
+      <div class="modal-backdrop" (click)="cancelEdit()">
+        <form #f="ngForm" (ngSubmit)="saveEdit(f)" class="modal-card" (click)="$event.stopPropagation()">
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+              Modifier la réservation #{{ editing.id }}
+            </h2>
+            <button type="button" class="text-gray-400 hover:text-gray-600" (click)="cancelEdit()">✕</button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <label class="block">
+              <span class="block text-xs font-medium text-gray-700 dark:text-gray-300">Début</span>
+              <input
+                type="datetime-local"
+                name="startDate"
+                required
+                [(ngModel)]="editForm.startDate"
+                class="filter-input"
+              />
+            </label>
+            <label class="block">
+              <span class="block text-xs font-medium text-gray-700 dark:text-gray-300">Fin</span>
+              <input
+                type="datetime-local"
+                name="endDate"
+                required
+                [(ngModel)]="editForm.endDate"
+                class="filter-input"
+              />
+            </label>
+            <label class="block">
+              <span class="block text-xs font-medium text-gray-700 dark:text-gray-300">Personnes</span>
+              <input
+                type="number"
+                name="numberOfPeople"
+                min="1"
+                required
+                [(ngModel)]="editForm.numberOfPeople"
+                class="filter-input"
+              />
+            </label>
+            <label class="block md:col-span-2">
+              <span class="block text-xs font-medium text-gray-700 dark:text-gray-300">Demandes spéciales</span>
+              <textarea
+                name="specialRequests"
+                rows="3"
+                [(ngModel)]="editForm.specialRequests"
+                class="filter-input"
+              ></textarea>
+            </label>
+          </div>
+
+          <div class="flex justify-end gap-2 pt-2">
+            <button type="button" class="btn-secondary-sm" (click)="cancelEdit()">Annuler</button>
+            <button
+              type="submit"
+              class="btn-primary-sm"
+              [disabled]="f.invalid || busyId === editing.id"
+            >
+              {{ busyId === editing.id ? 'Enregistrement…' : 'Enregistrer' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    }
+  }
+</div>

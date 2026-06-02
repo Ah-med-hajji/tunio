@@ -1,0 +1,78 @@
+<div class="p-6 max-w-4xl mx-auto space-y-6">
+  <p-toast />
+
+  <header class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Mon profil</h1>
+      <p class="text-sm text-gray-500 mt-1">Gérez vos informations personnelles.</p>
+    </div>
+  </header>
+
+  @if (loading) {
+    <div class="rounded-lg border border-gray-200 bg-white p-8 text-center text-gray-500 dark:bg-gray-900 dark:border-gray-800">
+      Chargement du profil…
+    </div>
+  } @else if (profile) {
+    <div class="rounded-lg border border-gray-200 bg-white p-6 dark:bg-gray-900 dark:border-gray-800">
+      <div class="flex items-center gap-4">
+        <div class="profile-avatar">
+          @if (profile.avatarUrl) {
+            <img [src]="profile.avatarUrl" alt="Avatar" />
+          } @else {
+            <span>{{ initials() }}</span>
+          }
+        </div>
+        <div>
+          <div class="text-lg font-semibold text-gray-900 dark:text-white">
+            {{ profile.firstName }} {{ profile.lastName }}
+          </div>
+          <div class="text-sm text-gray-500">{{ profile.email }}</div>
+          <div class="mt-1 inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+            {{ profile.role || '—' }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form #f="ngForm" (ngSubmit)="save(f)" class="rounded-lg border border-gray-200 bg-white p-6 dark:bg-gray-900 dark:border-gray-800 space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <label class="block">
+          <span class="block text-sm font-medium text-gray-700 dark:text-gray-300">Prénom</span>
+          <input type="text" name="firstName" [(ngModel)]="form.firstName" required class="profile-input" />
+        </label>
+        <label class="block">
+          <span class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nom</span>
+          <input type="text" name="lastName" [(ngModel)]="form.lastName" required class="profile-input" />
+        </label>
+        <label class="block">
+          <span class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</span>
+          <input type="email" [value]="profile.email" disabled class="profile-input opacity-70 cursor-not-allowed" />
+          <span class="text-xs text-gray-500 mt-1 inline-block">
+            Géré par Keycloak — modifiez-le depuis votre compte Keycloak.
+          </span>
+        </label>
+        <label class="block">
+          <span class="block text-sm font-medium text-gray-700 dark:text-gray-300">Téléphone</span>
+          <input type="tel" name="phone" [(ngModel)]="form.phone" pattern="[0-9 +\-]*" class="profile-input" />
+        </label>
+        <label class="block md:col-span-2">
+          <span class="block text-sm font-medium text-gray-700 dark:text-gray-300">URL de l'avatar</span>
+          <input type="url" name="avatarUrl" [(ngModel)]="form.avatarUrl" placeholder="https://…" class="profile-input" />
+          <span class="text-xs text-gray-500 mt-1 inline-block">
+            Collez l'URL d'une image publique. (L'upload de fichier est une amélioration prévue.)
+          </span>
+        </label>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-end gap-3">
+        <button type="button" class="btn-ghost" (click)="logout()">Se déconnecter</button>
+        <button type="button" class="btn-secondary" (click)="changePassword()">
+          Changer mon mot de passe
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="f.invalid || saving">
+          {{ saving ? 'Enregistrement…' : 'Enregistrer' }}
+        </button>
+      </div>
+    </form>
+  }
+</div>

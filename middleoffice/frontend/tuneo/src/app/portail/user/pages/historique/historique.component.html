@@ -1,0 +1,99 @@
+<div class="p-6 max-w-6xl mx-auto space-y-6">
+  <header class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Historique des réservations</h1>
+      <p class="text-sm text-gray-500 mt-1">Toutes vos réservations, passées et à venir.</p>
+    </div>
+    <a routerLink="/user/reservations" class="text-sm text-emerald-600 hover:text-emerald-700">
+      Gérer mes réservations →
+    </a>
+  </header>
+
+  @if (loading) {
+    <div class="rounded-lg border border-gray-200 bg-white p-8 text-center text-gray-500 dark:bg-gray-900 dark:border-gray-800">
+      Chargement…
+    </div>
+  } @else if (error) {
+    <div class="rounded-lg border border-rose-200 bg-rose-50 p-4 text-rose-700">{{ error }}</div>
+  } @else {
+    <!-- Filters -->
+    <div class="rounded-lg border border-gray-200 bg-white p-4 dark:bg-gray-900 dark:border-gray-800">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+        <label class="block">
+          <span class="block text-xs font-medium text-gray-700 dark:text-gray-300">Statut</span>
+          <select [(ngModel)]="statusFilter" class="filter-input">
+            <option value="ALL">Tous</option>
+            <option value="PENDING">En attente</option>
+            <option value="CONFIRMED">Confirmées</option>
+            <option value="CANCELLED">Annulées</option>
+          </select>
+        </label>
+        <label class="block">
+          <span class="block text-xs font-medium text-gray-700 dark:text-gray-300">Du</span>
+          <input type="date" [(ngModel)]="fromDate" class="filter-input" />
+        </label>
+        <label class="block">
+          <span class="block text-xs font-medium text-gray-700 dark:text-gray-300">Au</span>
+          <input type="date" [(ngModel)]="toDate" class="filter-input" />
+        </label>
+        <label class="block">
+          <span class="block text-xs font-medium text-gray-700 dark:text-gray-300">Recherche</span>
+          <input
+            type="text"
+            [(ngModel)]="query"
+            placeholder="Place, région, #id…"
+            class="filter-input"
+          />
+        </label>
+      </div>
+      <div class="flex justify-end mt-3">
+        <button type="button" class="text-xs text-gray-500 hover:text-gray-700" (click)="resetFilters()">
+          Réinitialiser les filtres
+        </button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="rounded-lg border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800 overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead class="bg-gray-50 dark:bg-gray-800 text-gray-500">
+            <tr>
+              <th class="px-4 py-3 text-left">#</th>
+              <th class="px-4 py-3 text-left">Place</th>
+              <th class="px-4 py-3 text-left">Période</th>
+              <th class="px-4 py-3 text-left">Pers.</th>
+              <th class="px-4 py-3 text-left">Statut</th>
+              <th class="px-4 py-3 text-left">Reçu</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            @for (r of filtered; track r.id) {
+              <tr>
+                <td class="px-4 py-3 font-medium">#{{ r.id }}</td>
+                <td class="px-4 py-3">
+                  <div class="font-medium text-gray-900 dark:text-white">{{ r.place?.name || '—' }}</div>
+                  <div class="text-xs text-gray-500">{{ r.place?.region || r.place?.address || '' }}</div>
+                </td>
+                <td class="px-4 py-3 whitespace-nowrap">
+                  {{ r.startDate | date:'dd/MM/yyyy' }} → {{ r.endDate | date:'dd/MM/yyyy' }}
+                </td>
+                <td class="px-4 py-3">{{ r.numberOfPeople }}</td>
+                <td class="px-4 py-3">
+                  <span class="badge" [ngClass]="statusClass(r.status)">{{ statusLabel(r.status) }}</span>
+                </td>
+                <td class="px-4 py-3">
+                  <button class="link" (click)="download(r)">Télécharger PDF</button>
+                </td>
+              </tr>
+            } @empty {
+              <tr><td colspan="6" class="px-4 py-6 text-center text-gray-400">
+                Aucune réservation pour ces filtres.
+              </td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>

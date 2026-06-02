@@ -1,0 +1,46 @@
+.filter-input {
+  margin-top: 0.25rem;
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  font-size: 0.875rem;
+  color: #111827;
+}
+.filter-input:focus {
+  outline: none;
+  border-color: #86b817;
+  box-shadow: 0 0 0 3px rgba(134, 184, 23, 0.18);
+}
+:host-context(.dark) .filter-input {
+  background: #111827;
+  color: #f9fafb;
+  border-color: #374151;
+}
+
+.badge {
+  display: inline-flex;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.badge-amber   { background: #fef3c7; color: #92400e; }
+.badge-emerald { background: #d1fae5; color: #065f46; }
+.badge-rose    { background: #ffe4e6; color: #9f1239; }
+.badge-gray    { background: #f3f4f6; color: #374151; }
+
+.link {
+  color: #047857;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+}
+.link:hover { color: #065f46; }

@@ -1,0 +1,84 @@
+################################
+# Angular / Node
+################################
+node_modules/
+dist/
+.angular/
+.cache/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+
+################################
+# Spring Boot / Java (Maven)
+################################
+target/
+*.log
+*.class
+*.jar
+*.war
+*.ear
+
+################################
+# Gradle
+################################
+.gradle/
+build/
+
+################################
+# IntelliJ IDEA
+################################
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+################################
+# VS Code
+################################
+.vscode/
+
+################################
+# OS Files
+################################
+.DS_Store
+Thumbs.db
+
+################################
+# Environment Files
+################################
+.env
+.env.*
+application-local.yml
+application-dev.yml
+
+################################
+# Docker
+################################
+docker-data/
+*.pid
+
+################################
+# Logs
+################################
+logs/
+*.log
+
+################################
+# Temporary Files
+################################
+*.tmp
+*.swp
+*.bak
+
+################################
+# Keycloak (if exporting realms)
+################################
+keycloak-export/
+application.yml
+application.properties

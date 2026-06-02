@@ -1,0 +1,91 @@
+.reservation-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 1.15rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+:host-context(.dark) .reservation-card { background: #111827; border-color: #1f2937; }
+
+.badge {
+  display: inline-flex;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.badge-amber   { background: #fef3c7; color: #92400e; }
+.badge-emerald { background: #d1fae5; color: #065f46; }
+.badge-rose    { background: #ffe4e6; color: #9f1239; }
+.badge-gray    { background: #f3f4f6; color: #374151; }
+
+.btn-primary-sm,
+.btn-secondary-sm,
+.btn-danger-sm,
+.btn-ghost-sm {
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+  border: 1px solid transparent;
+}
+
+.btn-primary-sm   { background: #86b817; color: #fff; border-color: #86b817; }
+.btn-primary-sm:hover:not(:disabled) { background: #6f9a13; }
+.btn-primary-sm:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.btn-secondary-sm { background: #fff; color: #111827; border-color: #d1d5db; }
+.btn-secondary-sm:hover:not(:disabled) { background: #f3f4f6; }
+.btn-secondary-sm:disabled { opacity: 0.5; cursor: not-allowed; }
+:host-context(.dark) .btn-secondary-sm {
+  background: #1f2937; color: #f9fafb; border-color: #374151;
+}
+
+.btn-danger-sm    { background: #fff; color: #be123c; border-color: #fecdd3; }
+.btn-danger-sm:hover:not(:disabled) { background: #fff1f2; }
+.btn-danger-sm:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.btn-ghost-sm     { background: transparent; color: #047857; }
+.btn-ghost-sm:hover { background: #ecfdf5; }
+
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+  z-index: 60;
+}
+.modal-card {
+  display: flex; flex-direction: column; gap: 0.9rem;
+  width: 100%; max-width: 560px;
+  background: #fff;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.18);
+}
+:host-context(.dark) .modal-card { background: #111827; color: #f9fafb; }
+
+.filter-input {
+  margin-top: 0.25rem;
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  font-size: 0.875rem;
+  color: #111827;
+}
+.filter-input:focus {
+  outline: none;
+  border-color: #86b817;
+  box-shadow: 0 0 0 3px rgba(134, 184, 23, 0.18);
+}
+:host-context(.dark) .filter-input {
+  background: #1f2937; color: #f9fafb; border-color: #374151;
+}

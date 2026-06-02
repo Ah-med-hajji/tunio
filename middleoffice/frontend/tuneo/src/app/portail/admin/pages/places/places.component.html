@@ -1,0 +1,330 @@
+<p-toast></p-toast>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- VUE LISTE                                               -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div *ngIf="!showDetail" class="min-h-screen bg-gray-100 p-6">
+  <div class="max-w-6xl mx-auto">
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-800">Espaces et Lieux</h1>
+      <select [(ngModel)]="selectedCategory" class="border border-gray-300 rounded-lg px-4 py-2 bg-white text-gray-700 outline-none">
+        <option value="Tous">Toutes les catégories</option>
+        <option *ngFor="let c of categories" [value]="c.name">{{ c.name }}</option>
+      </select>
+    </div>
+
+    <!-- FORMULAIRE -->
+    <div class="bg-white rounded-2xl shadow p-8 mb-10">
+      <h2 class="text-xl font-semibold text-gray-700 mb-6 pb-3 border-b border-gray-200">
+        {{ editId ? 'Modifier le lieu' : 'Ajouter un lieu' }}
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <div class="flex flex-col gap-1">
+          <label class="text-sm font-semibold text-gray-500">Nom de l'établissement</label>
+          <input [(ngModel)]="newPlace.name" class="input-field" placeholder="Ex: Université de Tunis">
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-sm font-semibold text-gray-500">Catégorie</label>
+          <select [ngModel]="newPlace.categorie" (ngModelChange)="onCategorieChange($event)" [compareWith]="compareCat" class="input-field bg-white">
+            <option [ngValue]="undefined">Sélectionner...</option>
+            <option *ngFor="let c of categories" [ngValue]="c">{{ c.name }}</option>
+          </select>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-sm font-semibold text-gray-500">Téléphone</label>
+          <input [(ngModel)]="newPlace.phone" class="input-field" placeholder="+216 71 000 000">
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-sm font-semibold text-gray-500">Email</label>
+          <input [(ngModel)]="newPlace.email" class="input-field" placeholder="contact@exemple.com">
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-sm font-semibold text-gray-500">Site Web</label>
+          <input [(ngModel)]="newPlace.website" class="input-field" placeholder="https://www.site.com">
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-sm font-semibold text-gray-500">Horaires d'ouverture</label>
+          <input [(ngModel)]="newPlace.openingHours" class="input-field" placeholder="Ex: 08h00 - 18h00">
+        </div>
+
+        <div class="flex flex-col gap-1 md:col-span-2">
+          <label class="text-sm font-semibold text-gray-500">Adresse complète</label>
+          <input [(ngModel)]="newPlace.address" class="input-field" placeholder="Numéro, Rue, Ville...">
+        </div>
+<div class="flex flex-col gap-1">
+  <label class="text-sm font-semibold text-gray-500">Région</label>
+  <select [(ngModel)]="newPlace.region" class="input-field bg-white">
+    <option value="">Sélectionner une région...</option>
+    <option *ngFor="let r of regions" [value]="r">{{ r }}</option>
+  </select>
+</div>
+        <div class="flex flex-col gap-1 md:col-span-2">
+          <label class="text-sm font-semibold text-gray-500">Description</label>
+          <textarea [(ngModel)]="newPlace.description" class="input-field" rows="3" placeholder="Description du lieu..."></textarea>
+        </div>
+
+        <!-- UPLOAD IMAGE DEPUIS PC -->
+        <div class="flex flex-col gap-2 md:col-span-2">
+          <label class="text-sm font-semibold text-gray-500">Photo du lieu</label>
+          <input type="file" accept="image/*" (change)="onImageSelected($event)" class="input-file">
+          <div *ngIf="newPlace.imageUrl" class="mt-2">
+            <img [src]="newPlace.imageUrl" class="h-40 w-auto rounded-xl border border-gray-200 object-cover shadow-sm">
+          </div>
+        </div>
+
+        <div class="md:col-span-2">
+          <button (click)="togglePickerMap()" class="btn-map">
+            📍 {{ newPlace.latitude ? 'Position enregistrée ✓' : 'Marquer sur la carte' }}
+          </button>
+        </div>
+
+        <div *ngIf="showPickerMap" class="md:col-span-2 h-72 rounded-xl overflow-hidden border border-gray-300">
+          <div #pickerMapContainer class="h-full w-full"></div>
+        </div>
+
+        <!-- PANEL HÔTEL -->
+        <ng-container *ngIf="isHotel">
+          <div class="md:col-span-2 panel-hotel">
+            <p class="text-sm font-bold mb-4" style="color:#86B817"> Options Hôtel</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="flex flex-col gap-1">
+                <label class="text-sm font-semibold text-gray-500">Étoiles</label>
+                <select [(ngModel)]="newPlace.stars" class="input-field bg-white">
+                  <option *ngFor="let s of [1,2,3,4,5]" [ngValue]="s">{{ s }} ★</option>
+                </select>
+              </div>
+              <div class="flex flex-col gap-1">
+                <label class="text-sm font-semibold text-gray-500">Chambres Simples</label>
+                <input type="number" [(ngModel)]="newPlace.roomsSingle" class="input-field" placeholder="0">
+              </div>
+              <div class="flex flex-col gap-1">
+                <label class="text-sm font-semibold text-gray-500">Chambres Doubles</label>
+                <input type="number" [(ngModel)]="newPlace.roomsDouble" class="input-field" placeholder="0">
+              </div>
+              <div class="flex flex-col gap-1">
+                <label class="text-sm font-semibold text-gray-500">Prix Simple (DT)</label>
+                <input type="number" [(ngModel)]="newPlace.priceSingle" class="input-field" placeholder="0">
+              </div>
+              <div class="flex flex-col gap-1">
+                <label class="text-sm font-semibold text-gray-500">Prix Double (DT)</label>
+                <input type="number" [(ngModel)]="newPlace.priceDouble" class="input-field" placeholder="0">
+              </div>
+              <div class="md:col-span-3 flex gap-6">
+                <label class="flex items-center gap-2 text-sm font-semibold text-gray-600 cursor-pointer">
+                  <input type="checkbox" [(ngModel)]="newPlace.fullBoard" class="w-4 h-4" style="accent-color:#86B817"> Pension Complète
+                </label>
+                <label class="flex items-center gap-2 text-sm font-semibold text-gray-600 cursor-pointer">
+                  <input type="checkbox" [(ngModel)]="newPlace.halfBoard" class="w-4 h-4" style="accent-color:#86B817"> Demi-Pension
+                </label>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- PANEL FACULTÉ -->
+        <ng-container *ngIf="isFaculte">
+          <div class="md:col-span-2 panel-faculte">
+            <p class="text-sm font-bold mb-4 text-blue-700">🎓 Options Établissement</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="flex flex-col gap-1">
+                <label class="text-sm font-semibold text-gray-500">Spécialités & Filières</label>
+                <input [(ngModel)]="newPlace.departments" class="input-field" placeholder="Ex: Informatique, Droit">
+              </div>
+              <div class="flex flex-col gap-1">
+                <label class="text-sm font-semibold text-gray-500">Nombre d'étudiants</label>
+                <input type="number" [(ngModel)]="newPlace.studentCount" class="input-field" placeholder="Ex: 2400">
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- PANEL MUSÉE -->
+        <ng-container *ngIf="isMusee">
+          <div class="md:col-span-2 panel-hotel">
+            <p class="text-sm font-bold mb-4" style="color:#86B817"> Options Musée</p>
+            <div class="flex flex-col gap-1">
+              <label class="text-sm font-semibold text-gray-500">Prix du ticket (DT)</label>
+              <input type="number" [(ngModel)]="newPlace.priceSingle" class="input-field" placeholder="0">
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- PANEL LOCATION VOITURE -->
+        <ng-container *ngIf="isLocationVoiture">
+          <div class="md:col-span-2 panel-hotel">
+            <p class="text-sm font-bold mb-4" style="color:#86B817"> Options Location Voiture</p>
+            <div class="flex flex-col gap-1">
+              <label class="text-sm font-semibold text-gray-500">Prix / Jour (DT)</label>
+              <input type="number" [(ngModel)]="newPlace.priceSingle" class="input-field" placeholder="0">
+            </div>
+          </div>
+        </ng-container>
+
+      </div>
+
+      <div class="flex justify-end gap-4 mt-8 pt-5 border-t border-gray-200">
+        <button (click)="cancelForm()" class="px-6 py-2 text-sm font-semibold text-gray-500 hover:text-gray-700 transition">Annuler</button>
+        <button (click)="editId ? updatePlace() : addPlace()" class="btn-submit">{{ editId ? 'Mettre à jour' : 'Ajouter le lieu' }}</button>
+      </div>
+    </div>
+
+    <!-- GRILLE DE CARTES -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div *ngFor="let p of filteredPlaces" class="place-card">
+        <div class="h-48 overflow-hidden">
+          <img [src]="p.imageUrl || 'assets/placeholder.jpg'" [alt]="p.name" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+        </div>
+        <div class="p-5">
+          <span class="category-badge">{{ p.categorie?.name }}</span>
+          <h3 class="text-lg font-bold text-gray-800 mt-1">{{ p.name }}</h3>
+          <p class="text-sm text-gray-400 mt-1 truncate">{{ p.address }}</p>
+          <div class="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
+            <button (click)="viewDetails(p)" class="btn-voir-plus">Voir plus</button>
+            <div class="flex gap-2">
+              <button (click)="editPlace(p)" class="btn-action btn-modifier">Modifier</button>
+              <button (click)="deletePlace(p.id!)" class="btn-action btn-supprimer">Supprimer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="filteredPlaces.length === 0" class="md:col-span-3 text-center py-16 text-gray-400">
+        <p class="text-4xl mb-3"></p>
+        <p class="font-medium">Aucun lieu trouvé.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- VUE DÉTAIL                                              -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div *ngIf="showDetail && selectedPlace" class="min-h-screen bg-gray-100 p-6">
+  <div class="max-w-4xl mx-auto">
+
+    <!-- Bouton Retour -->
+    <button (click)="closeDetails()" class="mb-6 flex items-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 px-4 py-2 rounded-lg font-semibold transition shadow-sm">
+      ← Retour
+    </button>
+
+    <!-- Image principale -->
+    <img [src]="selectedPlace.imageUrl || 'assets/placeholder.jpg'" [alt]="selectedPlace.name"
+         class="w-full h-80 object-cover rounded-2xl mb-6 shadow">
+
+    <!-- Header -->
+    <div class="flex items-center gap-3 mb-6">
+      <h1 class="text-3xl font-bold text-gray-800">{{ selectedPlace.name }}</h1>
+      <span class="category-badge">{{ selectedPlace.categorie?.name }}</span>
+    </div>
+
+    <!-- Infos générales -->
+    <div class="bg-white rounded-2xl shadow p-6 mb-6">
+      <h2 class="text-lg font-bold mb-4 text-gray-700">ℹ️ Informations générales</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 text-sm">
+        <p *ngIf="selectedPlace.address"><span class="font-semibold">📍 Adresse :</span> {{ selectedPlace.address }}</p>
+        <p *ngIf="selectedPlace.openingHours"><span class="font-semibold">🕐 Horaires :</span> {{ selectedPlace.openingHours }}</p>
+        <p *ngIf="selectedPlace.phone"><span class="font-semibold">📞 Téléphone :</span> {{ selectedPlace.phone }}</p>
+        <p *ngIf="selectedPlace.email"><span class="font-semibold">✉️ Email :</span> {{ selectedPlace.email }}</p>
+        <p *ngIf="selectedPlace.description" class="md:col-span-2"><span class="font-semibold">📝 Description :</span> {{ selectedPlace.description }}</p>
+        <p *ngIf="selectedPlace.website" class="md:col-span-2">
+          <span class="font-semibold">🌐 Site Web :</span>
+          <a [href]="selectedPlace.website" target="_blank" class="ml-1 underline" style="color:#86B817">{{ selectedPlace.website }}</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Détails Hôtel -->
+    <div *ngIf="isSelectedHotel" class="bg-white rounded-2xl shadow p-6 mb-6">
+      <h2 class="text-lg font-bold mb-4 text-gray-700">🏨 Détails Hôtel</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 text-sm">
+        <p *ngIf="selectedPlace.stars"><span class="font-semibold">⭐ Étoiles :</span> {{ selectedPlace.stars }}</p>
+        <p *ngIf="selectedPlace.roomsSingle"><span class="font-semibold">🛏️ Chambres Simples :</span> {{ selectedPlace.roomsSingle }}</p>
+        <p *ngIf="selectedPlace.roomsDouble"><span class="font-semibold">🛏️ Chambres Doubles :</span> {{ selectedPlace.roomsDouble }}</p>
+        <p *ngIf="selectedPlace.priceSingle"><span class="font-semibold">💰 Prix Simple :</span> {{ selectedPlace.priceSingle }} DT</p>
+        <p *ngIf="selectedPlace.priceDouble"><span class="font-semibold">💰 Prix Double :</span> {{ selectedPlace.priceDouble }} DT</p>
+        <p *ngIf="selectedPlace.fullBoard"><span class="font-semibold">🍽️ Pension Complète :</span> Oui</p>
+        <p *ngIf="selectedPlace.halfBoard"><span class="font-semibold">🍽️ Demi-Pension :</span> Oui</p>
+      </div>
+    </div>
+
+    <!-- Détails Faculté -->
+    <div *ngIf="isSelectedFaculte" class="bg-white rounded-2xl shadow p-6 mb-6">
+      <h2 class="text-lg font-bold mb-4 text-gray-700">🎓 Détails Établissement</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 text-sm">
+        <p *ngIf="selectedPlace.departments"><span class="font-semibold">📚 Filières :</span> {{ selectedPlace.departments }}</p>
+        <p *ngIf="selectedPlace.studentCount"><span class="font-semibold">👥 Étudiants :</span> {{ selectedPlace.studentCount }}</p>
+      </div>
+    </div>
+
+    <!-- Détails Hôpital -->
+    <div *ngIf="isSelectedHopital" class="bg-white rounded-2xl shadow p-6 mb-6">
+      <h2 class="text-lg font-bold mb-4 text-gray-700">🏥 Détails Hôpital</h2>
+      <div class="text-gray-700 text-sm">
+        <p *ngIf="selectedPlace.phone"><span class="font-semibold">🚨 Urgences :</span> {{ selectedPlace.phone }}</p>
+      </div>
+    </div>
+
+    <!-- Détails Restaurant -->
+    <div *ngIf="isSelectedRestaurant" class="bg-white rounded-2xl shadow p-6 mb-6">
+      <h2 class="text-lg font-bold mb-4 text-gray-700">🍽️ Détails Restaurant</h2>
+      <div class="text-gray-700 text-sm">
+        <p *ngIf="selectedPlace.website">
+          <span class="font-semibold">🌐 Menu en ligne :</span>
+          <a [href]="selectedPlace.website" target="_blank" class="ml-1 text-blue-600 underline">{{ selectedPlace.website }}</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Détails Musée -->
+    <div *ngIf="isSelectedMusee" class="bg-white rounded-2xl shadow p-6 mb-6">
+      <h2 class="text-lg font-bold mb-4 text-gray-700">🏛️ Détails Musée</h2>
+      <div class="text-gray-700 text-sm">
+        <p *ngIf="selectedPlace.priceSingle"><span class="font-semibold">🎟️ Prix du ticket :</span> {{ selectedPlace.priceSingle }} DT</p>
+      </div>
+    </div>
+
+    <!-- Détails Location Voiture -->
+    <div *ngIf="isSelectedLocationVoiture" class="bg-white rounded-2xl shadow p-6 mb-6">
+      <h2 class="text-lg font-bold mb-4 text-gray-700">🚗 Détails Location</h2>
+      <div class="text-gray-700 text-sm">
+        <p *ngIf="selectedPlace.priceSingle"><span class="font-semibold">💰 Prix / Jour :</span> {{ selectedPlace.priceSingle }} DT</p>
+      </div>
+    </div>
+
+    <!-- Détails Café -->
+    <div *ngIf="isSelectedCafe" class="bg-white rounded-2xl shadow p-6 mb-6">
+      <h2 class="text-lg font-bold mb-4 text-gray-700">☕ Détails Café</h2>
+      <div class="text-gray-700 text-sm">
+        <p *ngIf="selectedPlace.website">
+          <span class="font-semibold">🌐 Site :</span>
+          <a [href]="selectedPlace.website" target="_blank" class="ml-1 text-blue-600 underline">{{ selectedPlace.website }}</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Détails Aéroport -->
+    <div *ngIf="isSelectedAeroport" class="bg-white rounded-2xl shadow p-6 mb-6">
+      <h2 class="text-lg font-bold mb-4 text-gray-700">✈️ Détails Aéroport</h2>
+      <div class="text-gray-700 text-sm">
+        <p *ngIf="selectedPlace.phone"><span class="font-semibold">📞 Info :</span> {{ selectedPlace.phone }}</p>
+      </div>
+    </div>
+
+    <!-- CARTE LOCALISATION EN BAS -->
+    <div class="bg-white rounded-2xl shadow p-6 mb-6">
+      <h2 class="text-lg font-bold mb-4 text-gray-700">📍 Localisation sur la carte</h2>
+      <div class="h-72 rounded-xl overflow-hidden border border-gray-200" data-detail-map></div>
+    </div>
+
+  </div>
+</div>
