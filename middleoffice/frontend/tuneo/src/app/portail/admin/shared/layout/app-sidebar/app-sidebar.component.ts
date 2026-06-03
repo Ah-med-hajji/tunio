@@ -103,12 +103,6 @@ export class AppSidebarComponent implements OnInit, OnDestroy {
       roles: [ROLE_USER],
     },
     {
-      icon: AppSidebarComponent.ICON_CALENDAR,
-      name: 'Calendrier',
-      path: '/calendar',
-      roles: [ROLE_ADMIN],
-    },
-    {
       icon: AppSidebarComponent.ICON_USER,
       name: 'Mon profil',
       path: '/profile',

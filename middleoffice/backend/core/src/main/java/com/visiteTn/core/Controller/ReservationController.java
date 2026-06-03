@@ -97,6 +97,20 @@ public class ReservationController {
         return ResponseEntity.ok(out);
     }
 
+    // ── Partner: reservations on the partner's own places ─────────────────
+    @GetMapping("/partner-places")
+    public ResponseEntity<List<Reservation>> getPartnerPlacesReservations(@AuthenticationPrincipal Jwt jwt) {
+        if (jwt == null) return ResponseEntity.status(401).build();
+        String partnerUsername = jwt.getClaimAsString("preferred_username");
+        List<Place> places = placeRepository.findByOwnerUsername(partnerUsername);
+        List<Reservation> reservations = places.stream()
+                .flatMap(p -> reservationRepository.findByPlace(p).stream())
+                .sorted(Comparator.comparing(Reservation::getCreatedAt,
+                        Comparator.nullsLast(Comparator.reverseOrder())))
+                .toList();
+        return ResponseEntity.ok(reservations);
+    }
+
     // ── Mutations ─────────────────────────────────────────────────────────
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Reservation reservation,

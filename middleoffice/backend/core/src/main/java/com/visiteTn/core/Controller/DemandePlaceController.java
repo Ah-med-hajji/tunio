@@ -5,9 +5,12 @@ import com.visiteTn.core.entities.Place;
 import com.visiteTn.core.Repositories.DemandePlaceRepository;
 import com.visiteTn.core.Repositories.PlaceRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/demandes")
@@ -36,6 +39,23 @@ public class DemandePlaceController {
         return demandeRepository.findAll();
     }
 
+    // Partner voit ses propres demandes + stats
+    @GetMapping("/mine")
+    public ResponseEntity<Map<String, Object>> getMine(@AuthenticationPrincipal Jwt jwt) {
+        String username = jwt.getClaimAsString("preferred_username");
+        List<DemandePlace> demandes = demandeRepository.findByClientUsername(username);
+        long pending  = demandes.stream().filter(d -> d.getStatut() == DemandePlace.StatutDemande.PENDING).count();
+        long accepted = demandes.stream().filter(d -> d.getStatut() == DemandePlace.StatutDemande.ACCEPTED).count();
+        long refused  = demandes.stream().filter(d -> d.getStatut() == DemandePlace.StatutDemande.REFUSED).count();
+        return ResponseEntity.ok(Map.of(
+            "demandes", demandes,
+            "total",    demandes.size(),
+            "pending",  pending,
+            "accepted", accepted,
+            "refused",  refused
+        ));
+    }
+
     // Admin voit les demandes en attente
     @GetMapping("/pending")
     public List<DemandePlace> getPending() {
@@ -56,6 +76,7 @@ public class DemandePlaceController {
             place.setEmail(demande.getEmail());
             place.setImageUrl(demande.getImageUrl());
             place.setCategorie(demande.getCategorie());
+            place.setOwnerUsername(demande.getClientUsername());
             placeRepository.save(place);
 
             // Mettre à jour le statut

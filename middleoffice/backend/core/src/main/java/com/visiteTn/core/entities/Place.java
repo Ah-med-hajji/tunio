@@ -234,14 +234,14 @@ public class Place {
 
     public Integer getMuseumCapacity() { return museumCapacity; }
     public void setMuseumCapacity(Integer museumCapacity) { this.museumCapacity = museumCapacity; }
-    private Double pricePerNight;  // ← Ajouter ce champ
+    private Double pricePerNight;
 
-    // Getters & Setters
-    public Double getPricePerNight() {
-        return pricePerNight;
-    }
+    @Column(name = "owner_username")
+    private String ownerUsername;
 
-    public void setPricePerNight(Double pricePerNight) {
-        this.pricePerNight = pricePerNight;
-    }
+    public Double getPricePerNight() { return pricePerNight; }
+    public void setPricePerNight(Double pricePerNight) { this.pricePerNight = pricePerNight; }
+
+    public String getOwnerUsername() { return ownerUsername; }
+    public void setOwnerUsername(String ownerUsername) { this.ownerUsername = ownerUsername; }
 }

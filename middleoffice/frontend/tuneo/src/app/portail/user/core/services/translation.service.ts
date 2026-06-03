@@ -373,9 +373,13 @@ export class TranslationService {
   get lang(): Lang { return this._lang.value; }
 
   toggle(): void {
-    const next: Lang = this.lang === 'fr' ? 'en' : 'fr';
-    localStorage.setItem('tuneo_lang', next);
-    this._lang.next(next);
+    this.setLang(this.lang === 'fr' ? 'en' : 'fr');
+  }
+
+  setLang(lang: Lang): void {
+    if (this.lang === lang) return;
+    localStorage.setItem('tuneo_lang', lang);
+    this._lang.next(lang);
   }
 
   t(key: string): string {

@@ -49,12 +49,22 @@
                 <a routerLink="/contact" class="nav-item nav-link">{{ 'nav_contact' | tr }}</a>
             </div>
 
-            <!-- Language toggle -->
-            <button (click)="ts.toggle()"
-                    class="btn btn-sm ms-3"
-                    style="border:1.5px solid #86B817;color:#86B817;border-radius:20px;padding:4px 14px;font-weight:600;font-size:13px;">
-              {{ ts.lang === 'fr' ? '🇬🇧 EN' : '🇫🇷 FR' }}
-            </button>
+            <!-- Language toggle — FR | EN segmented pill -->
+            <div class="ms-3" style="display:inline-flex;align-items:center;border:1.5px solid #86B817;border-radius:20px;overflow:hidden;height:30px;">
+              <button (click)="ts.setLang('fr')"
+                      [style.background]="ts.lang === 'fr' ? '#86B817' : 'transparent'"
+                      [style.color]="ts.lang === 'fr' ? '#fff' : '#86B817'"
+                      style="border:none;padding:0 13px;height:100%;font-size:12px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:background .15s,color .15s;">
+                FR
+              </button>
+              <span style="width:1px;background:#86B817;height:100%;display:block;flex-shrink:0;"></span>
+              <button (click)="ts.setLang('en')"
+                      [style.background]="ts.lang === 'en' ? '#86B817' : 'transparent'"
+                      [style.color]="ts.lang === 'en' ? '#fff' : '#86B817'"
+                      style="border:none;padding:0 13px;height:100%;font-size:12px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:background .15s,color .15s;">
+                EN
+              </button>
+            </div>
 
             @if(isLogin) {
                 <a (click)="logout()" class="btn btn-primary rounded-pill py-2 px-4 ms-2" style="color:white;background-color:red;">{{ 'nav_logout' | tr }}</a>
@@ -365,8 +375,8 @@
         <div class="service-item rounded pt-3">
             <div class="p-4 text-center">
                 <i class="fa fa-3x fa-star text-primary mb-4"></i>
-                <h5>{{ ‘svc4_h’ | tr }}</h5>
-                <p>{{ ‘svc4_p’ | tr }}</p>
+                <h5>{{ 'svc4_h' | tr }}</h5>
+                <p>{{ 'svc4_p' | tr }}</p>
             </div>
         </div>
     </div>
@@ -450,11 +460,11 @@
 
                 <!-- Texte descriptif -->
                 <div class="col-md-6 text-white">
-                    <h6 class="text-white text-uppercase">{{ ‘book_tag’ | tr }}</h6>
-                    <h1 class="text-white mb-4">{{ ‘book_h1’ | tr }}</h1>
-                    <p class="mb-4">{{ ‘book_p1’ | tr }}</p>
-                    <p class="mb-4">{{ ‘book_p2’ | tr }}</p>
-                    <a class="btn btn-outline-light py-3 px-5 mt-2" href="">{{ ‘book_more’ | tr }}</a>
+                    <h6 class="text-white text-uppercase">{{ 'book_tag' | tr }}</h6>
+                    <h1 class="text-white mb-4">{{ 'book_h1' | tr }}</h1>
+                    <p class="mb-4">{{ 'book_p1' | tr }}</p>
+                    <p class="mb-4">{{ 'book_p2' | tr }}</p>
+                    <a class="btn btn-outline-light py-3 px-5 mt-2" href="">{{ 'book_more' | tr }}</a>
                 </div>
 
                 <!-- Formulaire de réservation -->
@@ -745,5 +755,3 @@
     <!-- Footer End -->
 
 
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>

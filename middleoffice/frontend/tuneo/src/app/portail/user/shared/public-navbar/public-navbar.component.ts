@@ -15,6 +15,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 })
 export class PublicNavbarComponent implements OnInit {
   isLogin: string | null = null;
+
   private keycloakService = inject(KeycloakService);
   private router = inject(Router);
   readonly ts = inject(TranslationService);

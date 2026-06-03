@@ -1,8 +1,29 @@
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
 import { AdminStats, AdminStatsService } from '../../../core/services/admin-stats.service';
+import { environment } from 'src/environments/environment';
+
+export interface PartnerStats {
+  total: number;
+  pending: number;
+  accepted: number;
+  refused: number;
+  demandes: any[];
+}
+
+export interface PlaceReservation {
+  id: number;
+  place: { id: number; name: string };
+  startDate: string;
+  endDate: string;
+  numberOfPeople: number;
+  specialRequests: string;
+  status: string;
+  createdAt: string;
+}
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -16,29 +37,76 @@ export class AdminDashboardComponent implements OnInit {
   error: string | null = null;
   stats: AdminStats | null = null;
 
+  // Partner view
+  isPartner = localStorage.getItem('role') === 'role_partner';
+  partnerStats: PartnerStats | null = null;
+  partnerReservations: PlaceReservation[] = [];
+  partnerTab: 'demandes' | 'reservations' = 'demandes';
+  private API = environment.apiUrl;
+
+
   monthlyReservationsOptions: ApexOptions = this.emptyBarOptions();
   revenueTrendOptions: ApexOptions = this.emptyLineOptions();
   statusBreakdownOptions: ApexOptions = this.emptyDonutOptions();
 
-  constructor(private adminStats: AdminStatsService) {}
+  constructor(private adminStats: AdminStatsService, private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.adminStats.getStats().subscribe({
-      next: (data) => {
-        this.stats = data;
-        this.monthlyReservationsOptions = this.buildBar(data.monthlyReservations);
-        this.revenueTrendOptions = this.buildLine(data.monthlyRevenue);
-        this.statusBreakdownOptions = this.buildDonut(data.reservationStatusBreakdown);
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('admin stats failed', err);
-        this.error = err?.status === 401
-          ? 'Vous devez être administrateur pour consulter le tableau de bord.'
-          : 'Impossible de charger les statistiques.';
-        this.loading = false;
-      },
-    });
+    if (this.isPartner) {
+      this.http.get<PartnerStats>(`${this.API}/api/demandes/mine`).subscribe({
+        next: (data) => { this.partnerStats = data; this.loading = false; },
+        error: () => { this.error = 'Impossible de charger vos demandes.'; this.loading = false; },
+      });
+      this.http.get<PlaceReservation[]>(`${this.API}/api/reservations/partner-places`).subscribe({
+        next: (data) => { this.partnerReservations = data; },
+        error: () => {},
+      });
+    } else {
+      this.adminStats.getStats().subscribe({
+        next: (data) => {
+          this.stats = data;
+          this.monthlyReservationsOptions = this.buildBar(data.monthlyReservations);
+          this.revenueTrendOptions = this.buildLine(data.monthlyRevenue);
+          this.statusBreakdownOptions = this.buildDonut(data.reservationStatusBreakdown);
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('admin stats failed', err);
+          this.error = err?.status === 401
+            ? 'Vous devez être administrateur pour consulter le tableau de bord.'
+            : 'Impossible de charger les statistiques.';
+          this.loading = false;
+        },
+      });
+    }
+  }
+
+  get reservationStats() {
+    const r = this.partnerReservations;
+    return {
+      total: r.length,
+      confirmed: r.filter(x => x.status === 'CONFIRMED').length,
+      pending: r.filter(x => x.status === 'PENDING').length,
+      cancelled: r.filter(x => x.status === 'CANCELLED').length,
+    };
+  }
+
+  resStatusLabel(s: string): string {
+    switch (s) {
+      case 'CONFIRMED': return 'Confirmée';
+      case 'PENDING':   return 'En attente';
+      case 'CANCELLED': return 'Annulée';
+      default:          return s;
+    }
+  }
+
+  resStatusClass(s: string): string {
+    switch (s) {
+      case 'CONFIRMED': return 'bg-emerald-100 text-emerald-800';
+      case 'PENDING':   return 'bg-amber-100 text-amber-800';
+      case 'CANCELLED': return 'bg-rose-100 text-rose-800';
+      default:          return 'bg-gray-100 text-gray-800';
+    }
   }
 
   statusLabel(status: string): string {

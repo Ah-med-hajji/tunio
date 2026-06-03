@@ -18,6 +18,8 @@ public interface PlaceRepository extends JpaRepository<Place, Integer> {
 
     List<Place> findByAverageRatingGreaterThanEqual(Double rating);
 
+    List<Place> findByOwnerUsername(String ownerUsername);
+
     @Query("""
         SELECT p FROM Place p
         WHERE (

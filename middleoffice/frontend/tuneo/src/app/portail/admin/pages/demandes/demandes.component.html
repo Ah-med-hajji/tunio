@@ -3,32 +3,60 @@
   <h1 class="text-2xl font-bold text-gray-800 mb-6">📋 Demandes d'ajout de lieu</h1>
 
   <!-- Filtres -->
-  <div class="flex gap-2 mb-6">
+  <div class="flex flex-wrap gap-2 mb-6">
     <button (click)="setFilter('ALL')"
-      [class.bg-blue-600]="filter === 'ALL'" [class.text-white]="filter === 'ALL'"
-      class="px-4 py-2 rounded-lg border text-sm font-medium transition">
-      Toutes ({{ demandes.length }})
+      class="px-4 py-2 rounded-lg border text-sm font-semibold transition-colors"
+      [style.background]="filter === 'ALL' ? '#86B817' : '#fff'"
+      [style.color]="filter === 'ALL' ? '#fff' : '#374151'"
+      [style.borderColor]="filter === 'ALL' ? '#86B817' : '#d1d5db'">
+      Toutes
+      <span class="ml-1.5 inline-flex items-center justify-center rounded-full w-5 h-5 text-xs font-bold"
+            [style.background]="filter === 'ALL' ? 'rgba(255,255,255,0.3)' : '#86B817'"
+            style="color:#fff;">
+        {{ demandes.length }}
+      </span>
     </button>
     <button (click)="setFilter('PENDING')"
-      [class.bg-yellow-500]="filter === 'PENDING'" [class.text-white]="filter === 'PENDING'"
-      class="px-4 py-2 rounded-lg border text-sm font-medium transition">
-      ⏳ En attente ({{ demandes | json | slice:0:0 }}{{ (demandes | slice:0:demandes.length) | json | slice:0:0 }}{{ demandes.length }})
+      class="px-4 py-2 rounded-lg border text-sm font-semibold transition-colors"
+      [style.background]="filter === 'PENDING' ? '#86B817' : '#fff'"
+      [style.color]="filter === 'PENDING' ? '#fff' : '#374151'"
+      [style.borderColor]="filter === 'PENDING' ? '#86B817' : '#d1d5db'">
+      En attente
+      <span class="ml-1.5 inline-flex items-center justify-center rounded-full w-5 h-5 text-xs font-bold"
+            [style.background]="filter === 'PENDING' ? 'rgba(255,255,255,0.3)' : '#f59e0b'"
+            style="color:#fff;">
+        {{ pendingCount }}
+      </span>
     </button>
     <button (click)="setFilter('ACCEPTED')"
-      [class.bg-green-500]="filter === 'ACCEPTED'" [class.text-white]="filter === 'ACCEPTED'"
-      class="px-4 py-2 rounded-lg border text-sm font-medium transition">
-      ✅ Acceptées
+      class="px-4 py-2 rounded-lg border text-sm font-semibold transition-colors"
+      [style.background]="filter === 'ACCEPTED' ? '#86B817' : '#fff'"
+      [style.color]="filter === 'ACCEPTED' ? '#fff' : '#374151'"
+      [style.borderColor]="filter === 'ACCEPTED' ? '#86B817' : '#d1d5db'">
+      Acceptées
+      <span class="ml-1.5 inline-flex items-center justify-center rounded-full w-5 h-5 text-xs font-bold"
+            [style.background]="filter === 'ACCEPTED' ? 'rgba(255,255,255,0.3)' : '#10b981'"
+            style="color:#fff;">
+        {{ acceptedCount }}
+      </span>
     </button>
     <button (click)="setFilter('REFUSED')"
-      [class.bg-red-500]="filter === 'REFUSED'" [class.text-white]="filter === 'REFUSED'"
-      class="px-4 py-2 rounded-lg border text-sm font-medium transition">
-      ❌ Refusées
+      class="px-4 py-2 rounded-lg border text-sm font-semibold transition-colors"
+      [style.background]="filter === 'REFUSED' ? '#86B817' : '#fff'"
+      [style.color]="filter === 'REFUSED' ? '#fff' : '#374151'"
+      [style.borderColor]="filter === 'REFUSED' ? '#86B817' : '#d1d5db'">
+      Refusées
+      <span class="ml-1.5 inline-flex items-center justify-center rounded-full w-5 h-5 text-xs font-bold"
+            [style.background]="filter === 'REFUSED' ? 'rgba(255,255,255,0.3)' : '#ef4444'"
+            style="color:#fff;">
+        {{ refusedCount }}
+      </span>
     </button>
   </div>
 
   <!-- Table -->
   <div class="bg-white rounded-xl shadow overflow-hidden">
-    <table class="w-full text-sm">
+    <table class="w-full text-sm text-gray-700">
       <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
         <tr>
           <th class="px-4 py-3 text-left">Image</th>
@@ -60,13 +88,13 @@
           </td>
 
           <!-- Catégorie -->
-          <td class="px-4 py-3 text-gray-600">{{ d.categorie?.name }}</td>
+          <td class="px-4 py-3 text-gray-700">{{ d.categorie?.name }}</td>
 
           <!-- Client -->
-          <td class="px-4 py-3 text-gray-600">{{ d.clientUsername || '—' }}</td>
+          <td class="px-4 py-3 text-gray-700">{{ d.clientUsername || '—' }}</td>
 
           <!-- Adresse -->
-          <td class="px-4 py-3 text-gray-600">{{ d.address || '—' }}</td>
+          <td class="px-4 py-3 text-gray-700">{{ d.address || '—' }}</td>
 
           <!-- Statut -->
           <td class="px-4 py-3">

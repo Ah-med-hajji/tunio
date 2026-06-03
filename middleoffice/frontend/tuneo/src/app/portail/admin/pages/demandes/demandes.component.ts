@@ -54,6 +54,10 @@ export class DemandesComponent implements OnInit {
     return this.demandes.filter(d => d.statut === this.filter);
   }
 
+  get pendingCount()  { return this.demandes.filter(d => d.statut === 'PENDING').length; }
+  get acceptedCount() { return this.demandes.filter(d => d.statut === 'ACCEPTED').length; }
+  get refusedCount()  { return this.demandes.filter(d => d.statut === 'REFUSED').length; }
+
   setFilter(f: 'ALL' | 'PENDING' | 'ACCEPTED' | 'REFUSED') {
     this.filter = f;
   }
