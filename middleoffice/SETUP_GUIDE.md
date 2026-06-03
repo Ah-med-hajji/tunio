@@ -225,7 +225,31 @@ For each user below: **Users** → **Add user** → fill the fields → **Create
 
 ---
 
-## 5. Start the backend
+## 5. Configure the backend
+
+The backend reads all secrets from a local `application.yml` file that is **not committed to git**
+(it's in `.gitignore` to prevent secret leaks). You must create it once.
+
+### 5.1 Create application.yml
+
+Copy the example file:
+```
+cd C:\projects\pfe_2026\middleoffice\backend\core\src\main\resources
+copy application.yml.example application.yml
+```
+
+Then open `application.yml` in a text editor and fill in the three placeholders:
+
+| Placeholder | Replace with |
+|---|---|
+| `gsk_replace_me` | Your Groq API key (free — get it at **https://console.groq.com** → API Keys → Create) |
+| `sk_test_replace_me` | Your Stripe **secret** test key (from **https://dashboard.stripe.com** → Developers → API keys) |
+| `pk_test_replace_me` | Your Stripe **publishable** test key (same page) |
+
+> If you skip the Stripe keys the payment button will fail. If you skip the Groq key the chatbot
+> will show "service indisponible" but everything else still works.
+
+### 5.2 Start the backend
 
 Open a **new Command Prompt** window:
 

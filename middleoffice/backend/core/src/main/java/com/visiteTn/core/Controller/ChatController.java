@@ -181,14 +181,15 @@ public class ChatController {
         } catch (org.springframework.web.client.HttpStatusCodeException e) {
             System.err.println("[ChatBot] Erreur Groq: " + e.getStatusCode() + " - " + e.getResponseBodyAsString());
             Map<String, Object> error = new HashMap<>();
-            error.put("error", "Erreur Groq");
-            error.put("details", e.getResponseBodyAsString());
-            return ResponseEntity.status(e.getStatusCode()).body(error);
+            error.put("error", "Service IA indisponible");
+            error.put("details", e.getStatusCode().toString());
+            // Return 503 so the frontend JWT interceptor does not misinterpret as auth failure
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(error);
         } catch (Exception e) {
             System.err.println("[ChatBot] Erreur: " + e.getMessage());
             Map<String, Object> error = new HashMap<>();
             error.put("error", "Erreur interne");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(error);
         }
     }
 }

@@ -20,6 +20,13 @@ public class CategorieController {
         return categorieRepository.findAll();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Categorie> getCategorieById(@PathVariable Integer id) {
+        return categorieRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping
     public Categorie createCategorie(@RequestBody Categorie categorie) {
         return categorieRepository.save(categorie);

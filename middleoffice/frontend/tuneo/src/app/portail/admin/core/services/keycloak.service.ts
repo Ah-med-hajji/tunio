@@ -134,7 +134,7 @@ export class KeycloakService {
    */
   logout(): void {
     localStorage.clear();
-    this.keycloakAuth.logout({ redirectUri: window.location.origin });
+    this.keycloakAuth.logout({ redirectUri: window.location.origin + '/user/homepage' });
   }
 
   /**

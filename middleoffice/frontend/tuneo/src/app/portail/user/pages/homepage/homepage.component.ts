@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { KeycloakService } from 'src/app/portail/admin/core/services/keycloak.service';
@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-homepage',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePickerModule],
+  imports: [CommonModule, FormsModule, RouterLink, DatePickerModule],
   templateUrl: './homepage.component.html',
   styleUrls: ['./homepage.component.css', '../style-user.css'],
   encapsulation: ViewEncapsulation.None

@@ -1,0 +1,65 @@
+spring:
+  application:
+    name: visiteTn
+
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/visite?useSSL=false&serverTimezone=UTC}
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:update}
+    show-sql: ${JPA_SHOW_SQL:true}
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+    date-format: "yyyy-MM-dd'T'HH:mm:ss"
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:9090/realms/TUNEO}
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:9090/realms/TUNEO/protocol/openid-connect/certs}
+
+jwt:
+  auth:
+    converter:
+      principle-attribute: ${JWT_PRINCIPLE_ATTRIBUTE:preferred_username}
+      resource-id: ${JWT_RESOURCE_ID:tuneoproject}
+
+server:
+  port: ${SERVER_PORT:8081}
+
+keycloak:
+  realm: ${KEYCLOAK_REALM:TUNEO}
+  server-url: ${KEYCLOAK_SERVER_URL:http://localhost:9090}
+  admin:
+    realm: ${KEYCLOAK_ADMIN_REALM:master}
+    client-id: ${KEYCLOAK_ADMIN_CLIENT_ID:admin-cli}
+    username: ${KEYCLOAK_ADMIN_USER:admin}
+    password: ${KEYCLOAK_ADMIN_PASSWORD:admin}
+
+# ===== STRIPE =====
+# Get your test keys from https://dashboard.stripe.com → Developers → API keys
+stripe:
+  secret:
+    key: ${STRIPE_SECRET_KEY:sk_test_replace_me}
+  public:
+    key: ${STRIPE_PUBLIC_KEY:pk_test_replace_me}
+
+# ===== GROQ AI =====
+# Get a free key from https://console.groq.com → API Keys → Create
+groq:
+  api:
+    key: ${GROQ_API_KEY:gsk_replace_me}
+    url: ${GROQ_API_URL:https://api.groq.com/openai/v1/chat/completions}

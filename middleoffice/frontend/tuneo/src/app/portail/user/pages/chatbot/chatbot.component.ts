@@ -314,7 +314,7 @@ export class ChatbotComponent implements OnInit, AfterViewChecked {
         if (!this.isOpen) this.unreadCount++;
       },
       error: () => {
-        this.addBotMessage('❌ Une erreur s\'est produite. Vérifiez que le serveur est en ligne.');
+        this.addBotMessage('⚠️ Le service IA est temporairement indisponible. Veuillez réessayer dans quelques instants.');
         this.isLoading = false;
       }
     });

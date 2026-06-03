@@ -1,0 +1,42 @@
+<app-public-navbar></app-public-navbar>
+
+<!-- Header -->
+<div style="background:linear-gradient(135deg,#6366f1,#4338ca);padding:60px 0;text-align:center;color:#fff;">
+  <div class="container">
+    <h1 style="font-size:2.5rem;font-weight:800;margin:0;">Catégories</h1>
+    <p style="font-size:1.1rem;opacity:.9;margin-top:10px;">
+      Explorez les lieux de Tunisie par catégorie
+    </p>
+    <nav style="margin-top:12px;">
+      <a routerLink="/user/homepage" style="color:#fff;opacity:.8;text-decoration:none;">Accueil</a>
+      <span style="margin:0 8px;opacity:.6;">/</span>
+      <span>Catégories</span>
+    </nav>
+  </div>
+</div>
+
+<!-- Categories Grid -->
+<div class="container py-5">
+
+  <div *ngIf="isLoading" style="text-align:center;padding:80px 0;">
+    <div style="font-size:3rem;">⏳</div>
+    <p style="color:#6b7280;margin-top:12px;">Chargement...</p>
+  </div>
+
+  <div *ngIf="!isLoading" class="row g-4">
+    <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let cat of categories">
+      <div class="cat-card" (click)="browse(cat.name)">
+        <div class="cat-icon">{{ cat.icon }}</div>
+        <h5 class="cat-name">{{ cat.name }}</h5>
+        <p class="cat-desc">{{ cat.description || 'Découvrez les meilleurs endroits de cette catégorie.' }}</p>
+        <span class="cat-link">Explorer →</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="container-fluid bg-dark text-light py-4 text-center">
+  <p class="mb-0">&copy; 2026 TUNÉO. Tous droits réservés.</p>
+</div>

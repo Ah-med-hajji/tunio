@@ -1,0 +1,54 @@
+<!-- Topbar -->
+<div class="container-fluid bg-dark px-5 d-none d-lg-block">
+  <div class="row gx-0">
+    <div class="col-lg-8 text-center text-lg-start mb-2 mb-lg-0">
+      <div class="d-inline-flex align-items-center" style="height:45px;">
+        <small class="me-3 text-light"><i class="fa fa-map-marker-alt me-2"></i>123 Street, Sousse, Tunisia</small>
+        <small class="me-3 text-light"><i class="fa fa-phone-alt me-2"></i>+216 xx xxx xxx</small>
+        <small class="text-light"><i class="fa fa-envelope-open me-2"></i>Tuneo&#64;gmail.com</small>
+      </div>
+    </div>
+    <div class="col-lg-4 text-center text-lg-end">
+      <div class="d-inline-flex align-items-center" style="height:45px;">
+        <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href="#"><i class="fab fa-twitter fw-normal"></i></a>
+        <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href="#"><i class="fab fa-facebook-f fw-normal"></i></a>
+        <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href="mailto:contact@tuneo.tn"><i class="fas fa-envelope"></i></a>
+        <a class="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2" href="#"><i class="fab fa-instagram fw-normal"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0" style="background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);">
+  <a routerLink="/user/homepage" class="navbar-brand p-0">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <img src="/images/logo/logo.png" alt="Logo" width="100" height="20" />
+      <h1 class="m-0" style="color:#86B817;position:relative;top:.8rem;">TUNÉO</h1>
+    </div>
+  </a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#publicNav">
+    <span class="fa fa-bars"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="publicNav">
+    <div class="navbar-nav ms-auto py-0">
+      <a routerLink="/user/homepage" routerLinkActive="active" class="nav-item nav-link">Home</a>
+      <a routerLink="/historique"    routerLinkActive="active" class="nav-item nav-link">Historique</a>
+      <a routerLink="/services"      routerLinkActive="active" class="nav-item nav-link">Services</a>
+      <a routerLink="/packages"      routerLinkActive="active" class="nav-item nav-link">Packages</a>
+      <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+        <div class="dropdown-menu m-0">
+          <a routerLink="/categories-public" class="dropdown-item">Catégories</a>
+          <a routerLink="/results"           class="dropdown-item">Places</a>
+        </div>
+      </div>
+      <a routerLink="/contact" routerLinkActive="active" class="nav-item nav-link">Contact</a>
+    </div>
+    @if (isLogin) {
+      <button (click)="logout()" class="btn btn-danger rounded-pill py-2 px-4 ms-2">Logout</button>
+    } @else {
+      <button (click)="login()" class="btn btn-success rounded-pill py-2 px-4 ms-2">Login</button>
+    }
+  </div>
+</nav>

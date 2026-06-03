@@ -35,18 +35,18 @@
         </button>
         <div class="navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto py-0">
-                <a href="index.html" class="nav-item nav-link active">Home</a>
-                <a routerLink="/historique" class="nav-item nav-link">Historique</a>
-                <a href="service.html" class="nav-item nav-link">Services</a>
-                <a href="package.html" class="nav-item nav-link">Packages</a>
+                <a routerLink="/user/homepage"     class="nav-item nav-link active">Home</a>
+                <a routerLink="/historique"        class="nav-item nav-link">Historique</a>
+                <a routerLink="/services"          class="nav-item nav-link">Services</a>
+                <a routerLink="/packages"          class="nav-item nav-link">Packages</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu m-0">
-                        <a href="/home/categories" class="dropdown-item">Catégories</a>
-                        <a href="/home/places" class="dropdown-item">Places</a>
+                        <a routerLink="/categories-public" class="dropdown-item">Catégories</a>
+                        <a routerLink="/results"           class="dropdown-item">Places</a>
                     </div>
                 </div>
-                <a href="contact.html" class="nav-item nav-link">Contact</a>
+                <a routerLink="/contact" class="nav-item nav-link">Contact</a>
             </div>
             @if(isLogin) {
                 <a (click)="logout()" class="btn btn-primary rounded-pill py-2 px-4" style="color:white;background-color:red;">Logout</a>

@@ -16,112 +16,50 @@ import { HistoriqueComponent } from './portail/user/pages/historique/historique.
 import { ReservationComponent } from './portail/user/pages/reservation/reservation.component';
 import { UserDashboardComponent } from './portail/user/pages/dashboard/user-dashboard.component';
 import { MesReservationsComponent } from './portail/user/pages/mes-reservations/mes-reservations.component';
+import { ServicesComponent } from './portail/user/pages/services/services.component';
+import { PackagesComponent } from './portail/user/pages/packages/packages.component';
+import { CategoriesPublicComponent } from './portail/user/pages/categories-public/categories-public.component';
+import { ContactComponent } from './portail/user/pages/contact/contact.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: AppLayoutComponent,
     children: [
+      // ── Default redirect ───────────────────────────────────────────────
+      { path: '', redirectTo: 'user/homepage', pathMatch: 'full' },
+
       // ── Public ─────────────────────────────────────────────────────────
-      {
-        path: 'user/homepage',
-        component: HomepageComponent,
-        title: 'TUNÉO | Accueil',
-      },
-      {
-        path: 'results',
-        component: PlacesPublicComponent,
-        title: 'TUNÉO | Résultats',
-      },
-      {
-        path: 'reservation/:id',
-        component: ReservationComponent,
-        title: 'TUNÉO | Réservation',
-      },
-      {
-        path: 'user/reservation/:id',
-        component: ReservationComponent,
-        title: 'TUNÉO | Réservation',
-      },
+      { path: 'user/homepage',    component: HomepageComponent,         title: 'TUNÉO | Accueil' },
+      { path: 'results',          component: PlacesPublicComponent,     title: 'TUNÉO | Résultats' },
+      { path: 'services',         component: ServicesComponent,         title: 'TUNÉO | Services' },
+      { path: 'packages',         component: PackagesComponent,         title: 'TUNÉO | Packages' },
+      { path: 'categories-public',component: CategoriesPublicComponent, title: 'TUNÉO | Catégories' },
+      { path: 'contact',          component: ContactComponent,          title: 'TUNÉO | Contact' },
+      { path: 'reservation/:id',      component: ReservationComponent,  title: 'TUNÉO | Réservation' },
+      { path: 'user/reservation/:id', component: ReservationComponent,  title: 'TUNÉO | Réservation' },
 
       // ── Authenticated ──────────────────────────────────────────────────
-      {
-        canActivate: [KeycloakGuard],
-        path: 'profile',
-        component: ProfileComponent,
-        title: 'TUNÉO | Mon profil',
-      },
+      { canActivate: [KeycloakGuard], path: 'profile',           component: ProfileComponent,        title: 'TUNÉO | Mon profil' },
 
       // ── Client (role_user) ────────────────────────────────────────────
-      {
-        canActivate: [KeycloakGuard],
-        path: 'user/dashboard',
-        component: UserDashboardComponent,
-        title: 'TUNÉO | Mon tableau de bord',
-      },
-      {
-        canActivate: [KeycloakGuard],
-        path: 'user/reservations',
-        component: MesReservationsComponent,
-        title: 'TUNÉO | Mes réservations',
-      },
-      {
-        canActivate: [KeycloakGuard],
-        path: 'historique',
-        component: HistoriqueComponent,
-        title: 'TUNÉO | Historique',
-      },
+      { canActivate: [KeycloakGuard], path: 'user/dashboard',    component: UserDashboardComponent,  title: 'TUNÉO | Mon tableau de bord' },
+      { canActivate: [KeycloakGuard], path: 'user/reservations', component: MesReservationsComponent,title: 'TUNÉO | Mes réservations' },
+      { canActivate: [KeycloakGuard], path: 'historique',        component: HistoriqueComponent,     title: 'TUNÉO | Historique' },
 
       // ── Admin / Partner ───────────────────────────────────────────────
-      {
-        canActivate: [KeycloakGuard],
-        path: 'dashboard',
-        component: AdminDashboardComponent,
-        title: 'TUNÉO | Tableau de bord',
-      },
-      {
-        canActivate: [KeycloakGuard],
-        path: 'categories',
-        component: CategoriesComponent,
-        title: 'TUNÉO | Catégories',
-      },
-      {
-        canActivate: [KeycloakGuard],
-        path: 'places',
-        component: PlacesComponent,
-        title: 'TUNÉO | Places',
-      },
-      {
-        canActivate: [KeycloakGuard],
-        path: 'demandes',
-        component: DemandesComponent,
-        title: 'TUNÉO | Demandes',
-      },
-      {
-        canActivate: [KeycloakGuard],
-        path: 'demande-form',
-        component: DemandeFormComponent,
-        title: 'TUNÉO | Soumettre une demande',
-      },
+      { canActivate: [KeycloakGuard], path: 'dashboard',         component: AdminDashboardComponent, title: 'TUNÉO | Tableau de bord' },
+      { canActivate: [KeycloakGuard], path: 'categories',        component: CategoriesComponent,     title: 'TUNÉO | Catégories (admin)' },
+      { canActivate: [KeycloakGuard], path: 'places',            component: PlacesComponent,         title: 'TUNÉO | Places (admin)' },
+      { canActivate: [KeycloakGuard], path: 'demandes',          component: DemandesComponent,       title: 'TUNÉO | Demandes' },
+      { canActivate: [KeycloakGuard], path: 'demande-form',      component: DemandeFormComponent,    title: 'TUNÉO | Soumettre une demande' },
     ],
   },
 
-  // ── Auth pages (outside the shared layout) ───────────────────────────
-  {
-    path: 'signin',
-    component: SignInComponent,
-    title: 'TUNÉO | Connexion',
-  },
-  {
-    path: 'signup',
-    component: SignUpComponent,
-    title: 'TUNÉO | Inscription',
-  },
+  // ── Auth pages ────────────────────────────────────────────────────────
+  { path: 'signin', component: SignInComponent, title: 'TUNÉO | Connexion' },
+  { path: 'signup', component: SignUpComponent, title: 'TUNÉO | Inscription' },
 
   // ── 404 ───────────────────────────────────────────────────────────────
-  {
-    path: '**',
-    component: NotFoundComponent,
-    title: 'TUNÉO | Page introuvable',
-  },
+  { path: '**', component: NotFoundComponent, title: 'TUNÉO | Page introuvable' },
 ];

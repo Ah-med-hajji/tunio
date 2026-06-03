@@ -1,0 +1,75 @@
+<app-public-navbar></app-public-navbar>
+
+<!-- Page Header -->
+<div class="page-header" style="background:linear-gradient(135deg,#86B817,#5a8a0a);padding:60px 0;text-align:center;color:#fff;">
+  <div class="container">
+    <h1 style="font-size:2.5rem;font-weight:800;margin:0;">Nos Services</h1>
+    <p style="font-size:1.1rem;opacity:.9;margin-top:10px;">
+      Découvrez tout ce que TUNÉO met à votre disposition pour un séjour parfait en Tunisie
+    </p>
+    <nav style="margin-top:12px;">
+      <a routerLink="/user/homepage" style="color:#fff;opacity:.8;text-decoration:none;">Accueil</a>
+      <span style="margin:0 8px;opacity:.6;">/</span>
+      <span>Services</span>
+    </nav>
+  </div>
+</div>
+
+<!-- Services Grid -->
+<div class="container py-5">
+
+  <div *ngIf="isLoading" style="text-align:center;padding:80px 0;">
+    <div style="font-size:3rem;">⏳</div>
+    <p style="color:#6b7280;margin-top:12px;">Chargement des services...</p>
+  </div>
+
+  <div *ngIf="!isLoading" class="row g-4">
+    <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let cat of categories">
+      <div class="service-card" (click)="browse(cat.name)">
+        <div class="service-icon" [style.background]="cat.color + '1a'" [style.border-color]="cat.color + '44'">
+          <span style="font-size:2.4rem;">{{ cat.icon }}</span>
+        </div>
+        <h5 class="service-title">{{ cat.name }}</h5>
+        <p class="service-desc">{{ cat.description || 'Explorez les meilleurs lieux de cette catégorie en Tunisie.' }}</p>
+        <button class="service-btn" [style.background]="cat.color">
+          Voir les lieux →
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Why Tuneo section -->
+<div style="background:#f9fafb;padding:60px 0;">
+  <div class="container">
+    <h2 style="text-align:center;font-weight:800;color:#1f2937;margin-bottom:40px;">Pourquoi choisir TUNÉO ?</h2>
+    <div class="row g-4">
+      <div class="col-md-3 text-center">
+        <div style="font-size:2.5rem;margin-bottom:12px;">🔍</div>
+        <h5 style="font-weight:700;">Recherche facile</h5>
+        <p style="color:#6b7280;font-size:.9rem;">Trouvez le lieu idéal par région, catégorie et dates.</p>
+      </div>
+      <div class="col-md-3 text-center">
+        <div style="font-size:2.5rem;margin-bottom:12px;">💳</div>
+        <h5 style="font-weight:700;">Paiement sécurisé</h5>
+        <p style="color:#6b7280;font-size:.9rem;">Réservez et payez en ligne via Stripe en toute sécurité.</p>
+      </div>
+      <div class="col-md-3 text-center">
+        <div style="font-size:2.5rem;margin-bottom:12px;">📄</div>
+        <h5 style="font-weight:700;">Facture PDF</h5>
+        <p style="color:#6b7280;font-size:.9rem;">Recevez une facture PDF instantanément après réservation.</p>
+      </div>
+      <div class="col-md-3 text-center">
+        <div style="font-size:2.5rem;margin-bottom:12px;">🤖</div>
+        <h5 style="font-weight:700;">Assistant IA</h5>
+        <p style="color:#6b7280;font-size:.9rem;">Notre chatbot répond à vos questions 24h/7j.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="container-fluid bg-dark text-light py-4 text-center">
+  <p class="mb-0">&copy; 2026 TUNÉO. Tous droits réservés.</p>
+</div>

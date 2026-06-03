@@ -1,0 +1,113 @@
+.filter-btn {
+  padding: 6px 18px;
+  border-radius: 50px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  color: #374151;
+  font-size: .85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .2s;
+}
+.filter-btn:hover, .filter-btn.active-filter {
+  background: #86B817;
+  border-color: #86B817;
+  color: #fff;
+}
+.pkg-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  transition: transform .2s, box-shadow .2s;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.pkg-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0,0,0,.14);
+}
+.pkg-img-wrap {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+.pkg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.pkg-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #FE8800;
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 50px;
+  font-size: .75rem;
+  font-weight: 700;
+}
+.pkg-stars {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0,0,0,.5);
+  color: #fbbf24;
+  padding: 3px 8px;
+  border-radius: 50px;
+  font-size: .8rem;
+}
+.pkg-body {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 6px;
+}
+.pkg-name {
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+  font-size: 1rem;
+}
+.pkg-meta {
+  font-size: .82rem;
+  color: #6b7280;
+  margin: 0;
+}
+.pkg-desc {
+  font-size: .83rem;
+  color: #9ca3af;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+.pkg-price {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: .82rem;
+  color: #374151;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 8px;
+}
+.pkg-price strong {
+  color: #86B817;
+}
+.pkg-btn {
+  margin-top: 10px;
+  background: #86B817;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 50px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s;
+}
+.pkg-btn:hover { background: #5a8a0a; }
