@@ -3,14 +3,12 @@
 <!-- Header -->
 <div style="background:linear-gradient(135deg,#14141F,#2d2d3a);padding:60px 0;text-align:center;color:#fff;">
   <div class="container">
-    <h1 style="font-size:2.5rem;font-weight:800;margin:0;">Contactez-nous</h1>
-    <p style="font-size:1.1rem;opacity:.8;margin-top:10px;">
-      Notre équipe est là pour vous aider. N'hésitez pas à nous écrire.
-    </p>
+    <h1 style="font-size:2.5rem;font-weight:800;margin:0;">{{ 'con_h1' | tr }}</h1>
+    <p style="font-size:1.1rem;opacity:.8;margin-top:10px;">{{ 'con_subtitle' | tr }}</p>
     <nav style="margin-top:12px;">
-      <a routerLink="/user/homepage" style="color:#fff;opacity:.7;text-decoration:none;">Accueil</a>
+      <a routerLink="/user/homepage" style="color:#fff;opacity:.7;text-decoration:none;">{{ 'home_breadcrumb' | tr }}</a>
       <span style="margin:0 8px;opacity:.5;">/</span>
-      <span>Contact</span>
+      <span>{{ 'con_h1' | tr }}</span>
     </nav>
   </div>
 </div>
@@ -20,42 +18,42 @@
 
     <!-- Contact Info -->
     <div class="col-lg-4">
-      <h4 style="font-weight:800;color:#1f2937;margin-bottom:24px;">Nos coordonnées</h4>
+      <h4 style="font-weight:800;color:#1f2937;margin-bottom:24px;">{{ 'con_coords' | tr }}</h4>
 
       <div class="info-card">
         <div class="info-icon" style="background:#86B817;">📍</div>
         <div>
-          <strong>Adresse</strong>
-          <p>123 Rue Principale, Sousse, Tunisie</p>
+          <strong>{{ 'con_addr_title' | tr }}</strong>
+          <p>{{ 'con_addr_val' | tr }}</p>
         </div>
       </div>
 
       <div class="info-card">
         <div class="info-icon" style="background:#3b82f6;">📞</div>
         <div>
-          <strong>Téléphone</strong>
-          <p>+216 XX XXX XXX</p>
+          <strong>{{ 'con_phone_title' | tr }}</strong>
+          <p>{{ 'con_phone_val' | tr }}</p>
         </div>
       </div>
 
       <div class="info-card">
         <div class="info-icon" style="background:#ef4444;">📧</div>
         <div>
-          <strong>Email</strong>
-          <p>contact@tuneo.tn</p>
+          <strong>{{ 'con_email_title' | tr }}</strong>
+          <p>{{ 'con_email_val' | tr }}</p>
         </div>
       </div>
 
       <div class="info-card">
         <div class="info-icon" style="background:#f59e0b;">🕐</div>
         <div>
-          <strong>Horaires</strong>
-          <p>Lun – Ven : 08h00 – 18h00</p>
+          <strong>{{ 'con_hours_title' | tr }}</strong>
+          <p>{{ 'con_hours_val' | tr }}</p>
         </div>
       </div>
 
       <div style="margin-top:24px;">
-        <h6 style="font-weight:700;margin-bottom:12px;">Suivez-nous</h6>
+        <h6 style="font-weight:700;margin-bottom:12px;">{{ 'con_follow' | tr }}</h6>
         <div style="display:flex;gap:10px;">
           <a href="#" class="social-btn" style="background:#1da1f2;"><i class="fab fa-twitter"></i></a>
           <a href="#" class="social-btn" style="background:#1877f2;"><i class="fab fa-facebook-f"></i></a>
@@ -68,33 +66,31 @@
     <!-- Contact Form -->
     <div class="col-lg-8">
       <div class="form-card">
-        <h4 style="font-weight:800;color:#1f2937;margin-bottom:24px;">Envoyer un message</h4>
+        <h4 style="font-weight:800;color:#1f2937;margin-bottom:24px;">{{ 'con_form_h' | tr }}</h4>
 
-        <div *ngIf="submitted" class="alert-success">
-          ✅ Votre message a été envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.
-        </div>
+        <div *ngIf="submitted" class="alert-success">{{ 'con_success' | tr }}</div>
 
         <form (ngSubmit)="send()" #contactForm="ngForm">
           <div class="row g-3">
             <div class="col-md-6">
-              <label class="form-label">Nom complet *</label>
-              <input type="text" class="form-control" [(ngModel)]="form.name" name="name" required placeholder="Votre nom" />
+              <label class="form-label">{{ 'con_name' | tr }}</label>
+              <input type="text" class="form-control" [(ngModel)]="form.name" name="name" required [placeholder]="'con_name_ph' | tr" />
             </div>
             <div class="col-md-6">
-              <label class="form-label">Email *</label>
-              <input type="email" class="form-control" [(ngModel)]="form.email" name="email" required placeholder="votre@email.com" />
+              <label class="form-label">{{ 'con_email_f' | tr }}</label>
+              <input type="email" class="form-control" [(ngModel)]="form.email" name="email" required [placeholder]="'con_email_ph' | tr" />
             </div>
             <div class="col-12">
-              <label class="form-label">Sujet</label>
-              <input type="text" class="form-control" [(ngModel)]="form.subject" name="subject" placeholder="Objet de votre message" />
+              <label class="form-label">{{ 'con_subject' | tr }}</label>
+              <input type="text" class="form-control" [(ngModel)]="form.subject" name="subject" [placeholder]="'con_subject_ph' | tr" />
             </div>
             <div class="col-12">
-              <label class="form-label">Message *</label>
-              <textarea class="form-control" [(ngModel)]="form.message" name="message" required rows="6" placeholder="Écrivez votre message ici..."></textarea>
+              <label class="form-label">{{ 'con_message' | tr }}</label>
+              <textarea class="form-control" [(ngModel)]="form.message" name="message" required rows="6" [placeholder]="'con_msg_ph' | tr"></textarea>
             </div>
             <div class="col-12">
               <button type="submit" [disabled]="!contactForm.valid" class="send-btn">
-                Envoyer le message ✉️
+                {{ 'con_send' | tr }}
               </button>
             </div>
           </div>
@@ -109,11 +105,11 @@
 <div style="background:#f3f4f6;height:300px;display:flex;align-items:center;justify-content:center;border-top:1px solid #e5e7eb;">
   <div style="text-align:center;color:#9ca3af;">
     <div style="font-size:3rem;">🗺️</div>
-    <p style="margin-top:8px;font-size:.95rem;">Carte Google Maps — Sousse, Tunisie</p>
+    <p style="margin-top:8px;font-size:.95rem;">{{ 'con_map' | tr }}</p>
   </div>
 </div>
 
 <!-- Footer -->
 <div class="container-fluid bg-dark text-light py-4 text-center">
-  <p class="mb-0">&copy; 2026 TUNÉO. Tous droits réservés.</p>
+  <p class="mb-0">{{ 'footer_rights' | tr }}</p>
 </div>

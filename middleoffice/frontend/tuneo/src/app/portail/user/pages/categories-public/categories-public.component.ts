@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { PublicNavbarComponent } from '../../shared/public-navbar/public-navbar.component';
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { environment } from 'src/environments/environment';
 
 interface Category { id: number; name: string; description: string; }
@@ -17,7 +18,7 @@ const ICONS: Record<string, string> = {
 @Component({
   selector: 'app-categories-public',
   standalone: true,
-  imports: [CommonModule, PublicNavbarComponent, RouterLink],
+  imports: [CommonModule, PublicNavbarComponent, RouterLink, TranslatePipe],
   templateUrl: './categories-public.component.html',
   styleUrls: ['../style-user.css', './categories-public.component.css'],
   encapsulation: ViewEncapsulation.None,

@@ -1,8 +1,9 @@
 import { Component, OnInit, inject, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { PublicNavbarComponent } from '../../shared/public-navbar/public-navbar.component';
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { environment } from 'src/environments/environment';
 
 interface Category {
@@ -35,7 +36,7 @@ function getMeta(name: string): { icon: string; color: string } {
 @Component({
   selector: 'app-services',
   standalone: true,
-  imports: [CommonModule, PublicNavbarComponent],
+  imports: [CommonModule, RouterLink, PublicNavbarComponent, TranslatePipe],
   templateUrl: './services.component.html',
   styleUrls: ['../style-user.css', './services.component.css'],
   encapsulation: ViewEncapsulation.None,

@@ -6,11 +6,13 @@ import { HttpClient } from '@angular/common/http';
 import { KeycloakService } from 'src/app/portail/admin/core/services/keycloak.service';
 import { DatePickerModule } from 'primeng/datepicker';
 import { environment } from 'src/environments/environment';
+import { TranslationService } from '../../core/services/translation.service';
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-homepage',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, DatePickerModule],
+  imports: [CommonModule, FormsModule, RouterLink, DatePickerModule, TranslatePipe],
   templateUrl: './homepage.component.html',
   styleUrls: ['./homepage.component.css', '../style-user.css'],
   encapsulation: ViewEncapsulation.None
@@ -22,6 +24,7 @@ export class HomepageComponent implements OnInit, OnDestroy {
   private readonly keycloakService = inject(KeycloakService);
   private readonly router          = inject(Router);
   private readonly http            = inject(HttpClient);
+  readonly ts = inject(TranslationService);
 
   private readonly API = environment.apiUrl;
 

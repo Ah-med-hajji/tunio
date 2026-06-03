@@ -3,14 +3,12 @@
 <!-- Page Header -->
 <div style="background:linear-gradient(135deg,#FE8800,#c96a00);padding:60px 0;text-align:center;color:#fff;">
   <div class="container">
-    <h1 style="font-size:2.5rem;font-weight:800;margin:0;">Nos Packages</h1>
-    <p style="font-size:1.1rem;opacity:.9;margin-top:10px;">
-      Découvrez tous les lieux disponibles en Tunisie — hôtels, restaurants, cafés et bien plus
-    </p>
+    <h1 style="font-size:2.5rem;font-weight:800;margin:0;">{{ 'pkg_h1' | tr }}</h1>
+    <p style="font-size:1.1rem;opacity:.9;margin-top:10px;">{{ 'pkg_subtitle' | tr }}</p>
     <nav style="margin-top:12px;">
-      <a routerLink="/user/homepage" style="color:#fff;opacity:.8;text-decoration:none;">Accueil</a>
+      <a routerLink="/user/homepage" style="color:#fff;opacity:.8;text-decoration:none;">{{ 'home_breadcrumb' | tr }}</a>
       <span style="margin:0 8px;opacity:.6;">/</span>
-      <span>Packages</span>
+      <span>{{ 'pkg_h1' | tr }}</span>
     </nav>
   </div>
 </div>
@@ -24,7 +22,7 @@
         (click)="setCategory(cat)"
         [class.active-filter]="selectedCategory === cat"
         class="filter-btn">
-        {{ cat }}
+        {{ cat === 'Tous' ? ('pkg_all' | tr) : cat }}
       </button>
     </div>
   </div>
@@ -35,12 +33,12 @@
 
   <div *ngIf="isLoading" style="text-align:center;padding:80px 0;">
     <div style="font-size:3rem;">⏳</div>
-    <p style="color:#6b7280;margin-top:12px;">Chargement des packages...</p>
+    <p style="color:#6b7280;margin-top:12px;">{{ 'pkg_loading' | tr }}</p>
   </div>
 
   <div *ngIf="!isLoading && filtered.length === 0" style="text-align:center;padding:80px 0;">
     <div style="font-size:3rem;">🔎</div>
-    <p style="color:#6b7280;margin-top:12px;">Aucun package trouvé pour cette catégorie.</p>
+    <p style="color:#6b7280;margin-top:12px;">{{ 'pkg_empty' | tr }}</p>
   </div>
 
   <div *ngIf="!isLoading && filtered.length > 0" class="row g-4">
@@ -58,13 +56,13 @@
           <p *ngIf="place.openingHours" class="pkg-meta">🕐 {{ place.openingHours }}</p>
           <p *ngIf="place.description" class="pkg-desc">{{ place.description }}</p>
           <div class="pkg-price" *ngIf="place.priceSingle || place.priceDouble || place.pricePerDay">
-            <span *ngIf="place.priceSingle">Chambre simple : <strong>{{ place.priceSingle }} DT</strong></span>
-            <span *ngIf="place.priceDouble">Chambre double : <strong>{{ place.priceDouble }} DT</strong></span>
+            <span *ngIf="place.priceSingle">{{ 'pkg_single' | tr }} <strong>{{ place.priceSingle }} DT</strong></span>
+            <span *ngIf="place.priceDouble">{{ 'pkg_double' | tr }} <strong>{{ place.priceDouble }} DT</strong></span>
             <span *ngIf="place.pricePerDay && !place.priceSingle && !place.priceDouble">
-              À partir de : <strong>{{ place.pricePerDay }} DT/j</strong>
+              {{ 'pkg_from' | tr }} <strong>{{ place.pricePerDay }} {{ 'pkg_per_day' | tr }}</strong>
             </span>
           </div>
-          <button (click)="reserve(place)" class="pkg-btn">Réserver →</button>
+          <button (click)="reserve(place)" class="pkg-btn">{{ 'pkg_reserve' | tr }}</button>
         </div>
       </div>
     </div>
@@ -74,5 +72,5 @@
 
 <!-- Footer -->
 <div class="container-fluid bg-dark text-light py-4 text-center">
-  <p class="mb-0">&copy; 2026 TUNÉO. Tous droits réservés.</p>
+  <p class="mb-0">{{ 'footer_rights' | tr }}</p>
 </div>

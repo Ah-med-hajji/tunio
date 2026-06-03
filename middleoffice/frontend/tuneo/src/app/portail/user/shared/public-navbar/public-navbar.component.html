@@ -32,23 +32,33 @@
   </button>
   <div class="collapse navbar-collapse" id="publicNav">
     <div class="navbar-nav ms-auto py-0">
-      <a routerLink="/user/homepage" routerLinkActive="active" class="nav-item nav-link">Home</a>
-      <a routerLink="/historique"    routerLinkActive="active" class="nav-item nav-link">Historique</a>
-      <a routerLink="/services"      routerLinkActive="active" class="nav-item nav-link">Services</a>
-      <a routerLink="/packages"      routerLinkActive="active" class="nav-item nav-link">Packages</a>
+      <a routerLink="/user/homepage"     routerLinkActive="active" class="nav-item nav-link">{{ 'nav_home'       | tr }}</a>
+      <a routerLink="/historique"        routerLinkActive="active" class="nav-item nav-link">{{ 'nav_historique' | tr }}</a>
+      <a routerLink="/services"          routerLinkActive="active" class="nav-item nav-link">{{ 'nav_services'   | tr }}</a>
+      <a routerLink="/packages"          routerLinkActive="active" class="nav-item nav-link">{{ 'nav_packages'   | tr }}</a>
       <div class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ 'nav_pages' | tr }}</a>
         <div class="dropdown-menu m-0">
-          <a routerLink="/categories-public" class="dropdown-item">Catégories</a>
-          <a routerLink="/results"           class="dropdown-item">Places</a>
+          <a routerLink="/categories-public" class="dropdown-item">{{ 'nav_categories' | tr }}</a>
+          <a routerLink="/results"           class="dropdown-item">{{ 'nav_places'     | tr }}</a>
         </div>
       </div>
-      <a routerLink="/contact" routerLinkActive="active" class="nav-item nav-link">Contact</a>
+      <a routerLink="/contact" routerLinkActive="active" class="nav-item nav-link">{{ 'nav_contact' | tr }}</a>
     </div>
+
+    <!-- Language toggle -->
+    <button (click)="ts.toggle()"
+            class="btn btn-sm ms-3"
+            style="border:1.5px solid #86B817;color:#86B817;border-radius:20px;padding:4px 14px;font-weight:600;font-size:13px;transition:all .2s;"
+            onmouseover="this.style.background='#86B817';this.style.color='#fff'"
+            onmouseout="this.style.background='transparent';this.style.color='#86B817'">
+      {{ ts.lang === 'fr' ? '🇬🇧 EN' : '🇫🇷 FR' }}
+    </button>
+
     @if (isLogin) {
-      <button (click)="logout()" class="btn btn-danger rounded-pill py-2 px-4 ms-2">Logout</button>
+      <button (click)="logout()" class="btn btn-danger rounded-pill py-2 px-4 ms-2">{{ 'nav_logout' | tr }}</button>
     } @else {
-      <button (click)="login()" class="btn btn-success rounded-pill py-2 px-4 ms-2">Login</button>
+      <button (click)="login()" class="btn btn-success rounded-pill py-2 px-4 ms-2">{{ 'nav_login' | tr }}</button>
     }
   </div>
 </nav>

@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { PublicNavbarComponent } from '../../shared/public-navbar/public-navbar.component';
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, PublicNavbarComponent],
+  imports: [CommonModule, FormsModule, RouterLink, PublicNavbarComponent, TranslatePipe],
   templateUrl: './contact.component.html',
   styleUrls: ['../style-user.css', './contact.component.css'],
   encapsulation: ViewEncapsulation.None,

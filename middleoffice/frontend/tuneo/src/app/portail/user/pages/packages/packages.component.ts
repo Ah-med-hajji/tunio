@@ -1,14 +1,15 @@
 import { Component, OnInit, inject, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { PublicNavbarComponent } from '../../shared/public-navbar/public-navbar.component';
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { PlacesService } from 'src/app/portail/admin/core/services/places.service';
 import { Place } from 'src/app/portail/admin/core/model/place.model';
 
 @Component({
   selector: 'app-packages',
   standalone: true,
-  imports: [CommonModule, PublicNavbarComponent],
+  imports: [CommonModule, RouterLink, PublicNavbarComponent, TranslatePipe],
   templateUrl: './packages.component.html',
   styleUrls: ['../style-user.css', './packages.component.css'],
   encapsulation: ViewEncapsulation.None,

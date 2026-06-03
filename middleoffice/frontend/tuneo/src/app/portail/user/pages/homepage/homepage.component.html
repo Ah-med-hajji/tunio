@@ -35,24 +35,32 @@
         </button>
         <div class="navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto py-0">
-                <a routerLink="/user/homepage"     class="nav-item nav-link active">Home</a>
-                <a routerLink="/historique"        class="nav-item nav-link">Historique</a>
-                <a routerLink="/services"          class="nav-item nav-link">Services</a>
-                <a routerLink="/packages"          class="nav-item nav-link">Packages</a>
+                <a routerLink="/user/homepage"     class="nav-item nav-link active">{{ 'nav_home'       | tr }}</a>
+                <a routerLink="/historique"        class="nav-item nav-link">{{ 'nav_historique' | tr }}</a>
+                <a routerLink="/services"          class="nav-item nav-link">{{ 'nav_services'   | tr }}</a>
+                <a routerLink="/packages"          class="nav-item nav-link">{{ 'nav_packages'   | tr }}</a>
                 <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ 'nav_pages' | tr }}</a>
                     <div class="dropdown-menu m-0">
-                        <a routerLink="/categories-public" class="dropdown-item">Catégories</a>
-                        <a routerLink="/results"           class="dropdown-item">Places</a>
+                        <a routerLink="/categories-public" class="dropdown-item">{{ 'nav_categories' | tr }}</a>
+                        <a routerLink="/results"           class="dropdown-item">{{ 'nav_places'     | tr }}</a>
                     </div>
                 </div>
-                <a routerLink="/contact" class="nav-item nav-link">Contact</a>
+                <a routerLink="/contact" class="nav-item nav-link">{{ 'nav_contact' | tr }}</a>
             </div>
+
+            <!-- Language toggle -->
+            <button (click)="ts.toggle()"
+                    class="btn btn-sm ms-3"
+                    style="border:1.5px solid #86B817;color:#86B817;border-radius:20px;padding:4px 14px;font-weight:600;font-size:13px;">
+              {{ ts.lang === 'fr' ? '🇬🇧 EN' : '🇫🇷 FR' }}
+            </button>
+
             @if(isLogin) {
-                <a (click)="logout()" class="btn btn-primary rounded-pill py-2 px-4" style="color:white;background-color:red;">Logout</a>
+                <a (click)="logout()" class="btn btn-primary rounded-pill py-2 px-4 ms-2" style="color:white;background-color:red;">{{ 'nav_logout' | tr }}</a>
             }
             @if(!isLogin) {
-                <a (click)="login()" routerLink="/signin" class="btn btn-primary rounded-pill py-2 px-4" style="color:white;background-color:green;">Login</a>
+                <a (click)="login()" routerLink="/signin" class="btn btn-primary rounded-pill py-2 px-4 ms-2" style="color:white;background-color:green;">{{ 'nav_login' | tr }}</a>
             }
         </div>
     </nav>
@@ -63,8 +71,8 @@
             <div class="row justify-content-center py-5">
                 <div class="col-lg-10 pt-lg-5 mt-lg-5 text-center">
 
-                    <h1 class="display-3 text-white mb-3 animated slideInDown">Profitez de vos vacances avec nous</h1>
-                    <p class="fs-4 text-white mb-4 animated slideInDown">Trouvez de magnifiques sites en un simple clic</p>
+                    <h1 class="display-3 text-white mb-3 animated slideInDown">{{ 'hero_title' | tr }}</h1>
+                    <p class="fs-4 text-white mb-4 animated slideInDown">{{ 'hero_subtitle' | tr }}</p>
 
                     <!-- ===== SEARCH WIDGET ===== -->
                     <div style="max-width:960px;margin:0 auto;text-align:left;">
@@ -110,9 +118,9 @@
 
   <!-- RÉGION -->
   <div style="flex:1.5;padding:8px 14px;display:flex;flex-direction:column;justify-content:center;position:relative;min-width:140px;">
-    <span style="font-size:10px;font-weight:700;color:#555;letter-spacing:.05em;margin-bottom:2px;display:block;">Région</span>
+    <span style="font-size:10px;font-weight:700;color:#555;letter-spacing:.05em;margin-bottom:2px;display:block;">{{ 'search_region' | tr }}</span>
     <input type="text"
-           placeholder="Tapez ou choisissez..."
+           [placeholder]="'search_type_region' | tr"
            [(ngModel)]="search.region"
            list="regions-list"
            autocomplete="off"
@@ -126,9 +134,9 @@
   <ng-container *ngIf="hasField('delegation')">
     <div style="width:1px;height:32px;background:#ddd;flex-shrink:0;"></div>
     <div style="flex:1;padding:8px 14px;display:flex;flex-direction:column;justify-content:center;min-width:120px;">
-      <span style="font-size:10px;font-weight:700;color:#555;letter-spacing:.05em;margin-bottom:2px;display:block;">Délégation</span>
+      <span style="font-size:10px;font-weight:700;color:#555;letter-spacing:.05em;margin-bottom:2px;display:block;">{{ 'search_delegation' | tr }}</span>
       <input type="text"
-             placeholder="Délégation..."
+             [placeholder]="'search_delegation' | tr"
              [(ngModel)]="search.delegation"
              style="border:none;outline:none;font-size:13px;color:#1a1a1a;background:transparent;width:100%;padding:0;" />
     </div>
@@ -254,7 +262,7 @@
   <!-- BOUTON RECHERCHER -->
   <button type="button" (click)="searchNow()"
           style="background:#86B817;color:#fff;border:none;border-radius:50px;padding:14px 24px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;margin-left:6px;">
-    🔍 Rechercher
+    {{ 'search_btn' | tr }}
   </button>
 
 </div>
@@ -289,24 +297,23 @@
                     </div>
                 </div>
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <h6 class="section-title bg-white text-start text-primary pe-3">à propos de nous</h6>
-                    <h1 class="mb-4">Bienvenue à <span class="text-primary">Tunéo</span></h1>
-                    <p class="mb-4">Tunéo est une plateforme en ligne dédiée à la découverte des meilleurs sites touristiques. Elle permet aux utilisateurs de rechercher, visualiser et réserver facilement des expériences uniques dans diverses destinations..</p>
-                    <p class="mb-4">Tunéo vous offre une expérience simple et rapide pour planifier vos sorties, découvrir les lieux incontournables et profiter au maximum de votre voyage ou de votre temps libre.</p>
+                    <h6 class="section-title bg-white text-start text-primary pe-3">{{ 'about_tag' | tr }}</h6>
+                    <h1 class="mb-4">{{ 'about_h1' | tr }} <span class="text-primary">Tunéo</span></h1>
+                    <p class="mb-4">{{ 'about_p1' | tr }}</p>
+                    <p class="mb-4">{{ 'about_p2' | tr }}</p>
                     <div class="row gy-2 gx-4 mb-4">
                         <div class="col-sm-6">
-                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Sites touristiques sélectionnés</p>
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>{{ 'about_li1' | tr }}</p>
                         </div>
                         <div class="col-sm-6">
-                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Réservation facile</p>
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>{{ 'about_li2' | tr }}</p>
                         </div>
                         <div class="col-sm-6">
-                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Informations fiables</p>
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>{{ 'about_li3' | tr }}</p>
                         </div>
                         <div class="col-sm-6">
-                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Plus de 100 destinations et lieux</p>
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>{{ 'about_li4' | tr }}</p>
                         </div>
-                       
                     </div>
                 </div>
             </div>
@@ -319,8 +326,8 @@
     <div class="container-xxl py-5">
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="section-title bg-white text-center text-primary px-3">Services</h6>
-                <h1 class="mb-5">Notre Services</h1>
+                <h6 class="section-title bg-white text-center text-primary px-3">{{ 'svc_tag' | tr }}</h6>
+                <h1 class="mb-5">{{ 'svc_h1' | tr }}</h1>
             </div>
            <div class="row g-4">
 
@@ -328,8 +335,8 @@
         <div class="service-item rounded pt-3">
             <div class="p-4 text-center">
                 <i class="fa fa-3x fa-map-marked-alt text-primary mb-4"></i>
-                <h5>Exploration des sites touristiques</h5>
-                <p>Découvrez les destinations et les lieux incontournables en Tunisie.</p>
+                <h5>{{ 'svc1_h' | tr }}</h5>
+                <p>{{ 'svc1_p' | tr }}</p>
             </div>
         </div>
     </div>
@@ -338,8 +345,8 @@
         <div class="service-item rounded pt-3">
             <div class="p-4 text-center">
                 <i class="fa fa-3x fa-utensils text-primary mb-4"></i>
-                <h5>Recherche de restaurants</h5>
-                <p>Accédez à une sélection des meilleurs restaurants et spécialités locales.</p>
+                <h5>{{ 'svc2_h' | tr }}</h5>
+                <p>{{ 'svc2_p' | tr }}</p>
             </div>
         </div>
     </div>
@@ -348,8 +355,8 @@
         <div class="service-item rounded pt-3">
             <div class="p-4 text-center">
                 <i class="fa fa-3x fa-calendar-check text-primary mb-4"></i>
-                <h5>Réservation en ligne</h5>
-                <p>Réservez facilement vos visites touristiques et vos tables.</p>
+                <h5>{{ 'svc3_h' | tr }}</h5>
+                <p>{{ 'svc3_p' | tr }}</p>
             </div>
         </div>
     </div>
@@ -358,8 +365,8 @@
         <div class="service-item rounded pt-3">
             <div class="p-4 text-center">
                 <i class="fa fa-3x fa-star text-primary mb-4"></i>
-                <h5>Système d’avis</h5>
-                <p>Consultez les évaluations et partagez votre expérience.</p>
+                <h5>{{ ‘svc4_h’ | tr }}</h5>
+                <p>{{ ‘svc4_p’ | tr }}</p>
             </div>
         </div>
     </div>
@@ -368,8 +375,8 @@
         <div class="service-item rounded pt-3">
             <div class="p-4 text-center">
                 <i class="fa fa-3x fa-route text-primary mb-4"></i>
-                <h5>Planification de visites</h5>
-                <p>Organisez vos sorties et explorez la Tunisie plus efficacement.</p>
+                <h5>{{ 'svc5_h' | tr }}</h5>
+                <p>{{ 'svc5_p' | tr }}</p>
             </div>
         </div>
     </div>
@@ -378,8 +385,8 @@
         <div class="service-item rounded pt-3">
             <div class="p-4 text-center">
                 <i class="fa fa-3x fa-mobile-alt text-primary mb-4"></i>
-                <h5>Plateforme intuitive</h5>
-                <p>Une interface simple pour accéder rapidement aux informations touristiques.</p>
+                <h5>{{ 'svc6_h' | tr }}</h5>
+                <p>{{ 'svc6_p' | tr }}</p>
             </div>
         </div>
     </div>
@@ -394,8 +401,8 @@
     <div class="container-xxl py-5 destination">
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="section-title bg-white text-center text-primary px-3">Destination</h6>
-                <h1 class="mb-5">Destination populaire</h1>
+                <h6 class="section-title bg-white text-center text-primary px-3">{{ 'dest_tag' | tr }}</h6>
+                <h1 class="mb-5">{{ 'dest_h1' | tr }}</h1>
             </div>
             <div class="row g-3">
                 <div class="col-lg-7 col-md-6">
@@ -443,48 +450,36 @@
 
                 <!-- Texte descriptif -->
                 <div class="col-md-6 text-white">
-                    <h6 class="text-white text-uppercase">Réservation</h6>
-                    <h1 class="text-white mb-4">Réservez Votre Tour</h1>
-                    <p class="mb-4">
-                        Explorez la Tunisie avec nos circuits exclusifs et flexibles. Choisissez votre destination préférée et réservez facilement en ligne.
-                    </p>
-                    <p class="mb-4">
-                        De Sidi Bou Saïd aux oasis du Sud, profitez d’expériences uniques et mémorables. Nos packages incluent hébergement, transport et visites guidées.
-                    </p>
-                    <a class="btn btn-outline-light py-3 px-5 mt-2" href="">En savoir plus</a>
+                    <h6 class="text-white text-uppercase">{{ ‘book_tag’ | tr }}</h6>
+                    <h1 class="text-white mb-4">{{ ‘book_h1’ | tr }}</h1>
+                    <p class="mb-4">{{ ‘book_p1’ | tr }}</p>
+                    <p class="mb-4">{{ ‘book_p2’ | tr }}</p>
+                    <a class="btn btn-outline-light py-3 px-5 mt-2" href="">{{ ‘book_more’ | tr }}</a>
                 </div>
 
                 <!-- Formulaire de réservation -->
                 <div class="col-md-6">
-                    <h1 class="text-white mb-4">Réservez un Circuit</h1>
+                    <h1 class="text-white mb-4">{{ 'book_form_h1' | tr }}</h1>
                     <form>
                         <div class="row g-3">
-
-                            <!-- Nom -->
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control bg-transparent" id="name" placeholder="Votre Nom">
-                                    <label for="name">Votre Nom</label>
+                                    <input type="text" class="form-control bg-transparent" id="name" [placeholder]="'book_name' | tr">
+                                    <label for="name">{{ 'book_name' | tr }}</label>
                                 </div>
                             </div>
-
-                            <!-- Email -->
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="email" class="form-control bg-transparent" id="email" placeholder="Votre Email">
-                                    <label for="email">Votre Email</label>
+                                    <input type="email" class="form-control bg-transparent" id="email" [placeholder]="'book_email' | tr">
+                                    <label for="email">{{ 'book_email' | tr }}</label>
                                 </div>
                             </div>
-
-                            <!-- Date -->
                             <div class="col-md-6">
-                                <div class="form-floating date" id="date3" data-target-input="nearest">
-                                    <input type="text" class="form-control bg-transparent datetimepicker-input" id="datetime" placeholder="Date & Heure" data-target="#date3" data-toggle="datetimepicker" />
-                                    <label for="datetime">Date & Heure</label>
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-transparent" id="datetime" [placeholder]="'book_datetime' | tr">
+                                    <label for="datetime">{{ 'book_datetime' | tr }}</label>
                                 </div>
                             </div>
-
-                            <!-- Destination -->
                             <div class="col-md-6">
                                 <div class="form-floating">
                                     <select class="form-select bg-transparent" id="select1">
@@ -493,23 +488,18 @@
                                         <option value="3">Carthage</option>
                                         <option value="4">Ain Draham</option>
                                     </select>
-                                    <label for="select1">Destination</label>
+                                    <label for="select1">{{ 'book_dest' | tr }}</label>
                                 </div>
                             </div>
-
-                            <!-- Demande spéciale -->
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <textarea class="form-control bg-transparent" placeholder="Demande spéciale" id="message" style="height: 100px"></textarea>
-                                    <label for="message">Demande spéciale</label>
+                                    <textarea class="form-control bg-transparent" [placeholder]="'book_special' | tr" id="message" style="height: 100px"></textarea>
+                                    <label for="message">{{ 'book_special' | tr }}</label>
                                 </div>
                             </div>
-
-                            <!-- Bouton réserver -->
                             <div class="col-12">
-                                <button class="btn btn-outline-light w-100 py-3" type="submit">Réserver</button>
+                                <button class="btn btn-outline-light w-100 py-3" type="submit">{{ 'book_btn' | tr }}</button>
                             </div>
-
                         </div>
                     </form>
                 </div>
@@ -523,8 +513,8 @@
   <div class="container-xxl py-5">
     <div class="container">
         <div class="text-center pb-4 wow fadeInUp" data-wow-delay="0.1s">
-            <h6 class="section-title bg-white text-center text-primary px-3">Processus</h6>
-            <h1 class="mb-5">3 étapes simples pour réserver</h1>
+            <h6 class="section-title bg-white text-center text-primary px-3">{{ 'proc_tag' | tr }}</h6>
+            <h1 class="mb-5">{{ 'proc_h1' | tr }}</h1>
         </div>
         <div class="row gy-5 gx-4 justify-content-center">
 
@@ -534,10 +524,10 @@
                     <div class="d-inline-flex align-items-center justify-content-center bg-primary rounded-circle position-absolute top-0 start-50 translate-middle shadow" style="width: 100px; height: 100px;">
                         <i class="fa fa-map-marker-alt fa-3x text-white"></i>
                     </div>
-                    <h5 class="mt-4">Choisissez votre destination</h5>
+                    <h5 class="mt-4">{{ 'proc1_h' | tr }}</h5>
                     <hr class="w-25 mx-auto bg-primary mb-1">
                     <hr class="w-50 mx-auto bg-primary mt-0">
-                    <p class="mb-0">Sélectionnez parmi nos destinations tunisiennes : Sidi Bou Saïd, Tozeur, Carthage ou Ain Draham.</p>
+                    <p class="mb-0">{{ 'proc1_p' | tr }}</p>
                 </div>
             </div>
 
@@ -547,10 +537,10 @@
                     <div class="d-inline-flex align-items-center justify-content-center bg-primary rounded-circle position-absolute top-0 start-50 translate-middle shadow" style="width: 100px; height: 100px;">
                         <i class="fa fa-credit-card fa-3x text-white"></i>
                     </div>
-                    <h5 class="mt-4">Payez en ligne</h5>
+                    <h5 class="mt-4">{{ 'proc2_h' | tr }}</h5>
                     <hr class="w-25 mx-auto bg-primary mb-1">
                     <hr class="w-50 mx-auto bg-primary mt-0">
-                    <p class="mb-0">Réglez facilement et en toute sécurité pour valider votre réservation.</p>
+                    <p class="mb-0">{{ 'proc2_p' | tr }}</p>
                 </div>
             </div>
 
@@ -560,10 +550,10 @@
                     <div class="d-inline-flex align-items-center justify-content-center bg-primary rounded-circle position-absolute top-0 start-50 translate-middle shadow" style="width: 100px; height: 100px;">
                         <i class="fa fa-plane fa-3x text-white"></i>
                     </div>
-                    <h5 class="mt-4">Explorez la Tunisie</h5>
+                    <h5 class="mt-4">{{ 'proc3_h' | tr }}</h5>
                     <hr class="w-25 mx-auto bg-primary mb-1">
                     <hr class="w-50 mx-auto bg-primary mt-0">
-                    <p class="mb-0">Profitez de votre voyage et vivez des expériences inoubliables en Tunisie.</p>
+                    <p class="mb-0">{{ 'proc3_p' | tr }}</p>
                 </div>
             </div>
 
@@ -577,8 +567,8 @@
 <div class="container-xxl py-5">
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-            <h6 class="section-title bg-white text-center text-primary px-3">Partenaire de Voyage</h6>
-            <h1 class="mb-5">Découvrez Nos Partenaires</h1>
+            <h6 class="section-title bg-white text-center text-primary px-3">{{ 'part_tag' | tr }}</h6>
+            <h1 class="mb-5">{{ 'part_h1' | tr }}</h1>
         </div>
 
         <div class="row g-4"><!-- Partenaire 1 : Four Seasons Gammarth -->
@@ -591,13 +581,12 @@
 
             <div class="text-center p-4">
                 <h5 class="mb-0">Four Seasons Gammarth</h5>
-                <small>Hôtel partenaire</small>
+                <small>{{ 'part_hotel' | tr }}</small>
             </div>
         </div>
     </a>
 </div>
 
-<!-- Partenaire 3 : Oliver Clinique -->
 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
     <a href="https://www.cliniquelesoliviers.net/" target="_blank" style="text-decoration: none; color: inherit;">
         <div class="team-item">
@@ -606,36 +595,35 @@
             </div>
             <div class="text-center p-4">
                 <h5 class="mb-0">Oliver Clinique</h5>
-                <small>Clinique partenaire</small>
+                <small>{{ 'part_clinic' | tr }}</small>
             </div>
         </div>
     </a>
 </div>
 
-<!-- Partenaire 3 : Golf marsa -->
 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
     <a href="https://restaurantlegolfe.com/" target="_blank" style="text-decoration: none; color: inherit;">
         <div class="team-item">
             <div class="overflow-hidden" style="height: 250px; display: flex; justify-content: center; align-items: center;">
-                <img src="img/golf.jpg" alt="Wafa Cash" style="width: 100%; height: 100%; object-fit: cover;">
+                <img src="img/golf.jpg" alt="Golf Marsa" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
             <div class="text-center p-4">
                 <h5 class="mb-0">Golf Marsa</h5>
-                <small>Restaurant partenaire</small>
+                <small>{{ 'part_rest' | tr }}</small>
             </div>
         </div>
     </a>
 </div>
-<!-- Partenaire 4 : Movimpik Sousse -->
+
 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
     <a href="https://movenpick.accor.com/" target="_blank" style="text-decoration: none; color: inherit;">
         <div class="team-item">
             <div class="overflow-hidden" style="height: 250px; display: flex; justify-content: center; align-items: center;">
-                <img src="img/mov.jpg" alt="Movimpik Sousse" style="width: 100%; height: 100%; object-fit: cover;">
+                <img src="img/mov.jpg" alt="Movenpick Sousse" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
             <div class="text-center p-4">
-                <h5 class="mb-0">Movimpik Sousse</h5>
-                <small>Hôtel partenaire</small>
+                <h5 class="mb-0">Movenpick Sousse</h5>
+                <small>{{ 'part_hotel' | tr }}</small>
             </div>
         </div>
     </a>
@@ -689,17 +677,17 @@
 
             <!-- À propos -->
             <div class="col-lg-3 col-md-6">
-                <h4 class="text-white mb-3">À propos</h4>
-                <a class="btn btn-link" href="">Contact</a>
-                <a class="btn btn-link" href="">Politique de confidentialité</a>
-                <a class="btn btn-link" href="">Conditions d'utilisation</a>
-                <a class="btn btn-link" href="">FAQs & Aide</a>
+                <h4 class="text-white mb-3">{{ 'foot_about' | tr }}</h4>
+                <a class="btn btn-link" href="">{{ 'foot_contact' | tr }}</a>
+                <a class="btn btn-link" href="">{{ 'foot_privacy' | tr }}</a>
+                <a class="btn btn-link" href="">{{ 'foot_terms' | tr }}</a>
+                <a class="btn btn-link" href="">{{ 'foot_faq' | tr }}</a>
             </div>
 
             <!-- Contact -->
             <div class="col-lg-3 col-md-6">
-                <h4 class="text-white mb-3">Contact</h4>
-                <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Rue, Sousse, Tunisie</p>
+                <h4 class="text-white mb-3">{{ 'foot_contact' | tr }}</h4>
+                <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>{{ 'foot_addr' | tr }}</p>
                 <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+216 XX XXX XXX</p>
                 <p class="mb-2"><i class="fa fa-envelope me-3"></i>tuneo@gmail.com</p>
                 <div class="d-flex pt-2">
@@ -712,7 +700,7 @@
 
             <!-- Galerie -->
             <div class="col-lg-3 col-md-6">
-                <h4 class="text-white mb-3">Galerie</h4>
+                <h4 class="text-white mb-3">{{ 'foot_gallery' | tr }}</h4>
                 <div class="row g-2 pt-2">
                     <div class="col-4">
                         <img class="img-fluid bg-light p-1" src="img/djem.jpg" alt="Site touristique">
@@ -744,10 +732,10 @@
                 <
                 <div class="col-md-6 text-center text-md-end">
                     <div class="footer-menu">
-                        <a href="">Accueil</a>
-                        <a href="">Cookies</a>
-                        <a href="">Aide</a>
-                        <a href="">FAQs</a>
+                        <a href="">{{ 'foot_home' | tr }}</a>
+                        <a href="">{{ 'foot_cookies' | tr }}</a>
+                        <a href="">{{ 'foot_help' | tr }}</a>
+                        <a href="">{{ 'foot_faq' | tr }}</a>
                     </div>
                 </div>
             </div>
