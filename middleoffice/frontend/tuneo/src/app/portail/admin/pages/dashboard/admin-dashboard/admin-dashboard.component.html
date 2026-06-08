@@ -20,7 +20,6 @@
       <div class="rounded-lg border border-rose-200 bg-rose-50 p-4 text-rose-700">{{ error }}</div>
     } @else if (partnerStats) {
 
-      <!-- Tabs -->
       <div class="flex gap-1 border-b border-gray-200 dark:border-gray-700">
         <button (click)="partnerTab = 'demandes'"
           class="px-5 py-2.5 text-sm font-semibold rounded-t-lg border-b-2 transition-colors"
@@ -42,116 +41,77 @@
         </button>
       </div>
 
-      <!-- ── TAB: Demandes ── -->
       @if (partnerTab === 'demandes') {
-
-      <!-- KPI cards -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="kpi-card">
-          <span class="kpi-label">Total demandes</span>
-          <span class="kpi-value">{{ partnerStats.total }}</span>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="kpi-card"><span class="kpi-label">Total demandes</span><span class="kpi-value">{{ partnerStats.total }}</span></div>
+          <div class="kpi-card" style="border-left:4px solid #f59e0b;"><span class="kpi-label">En attente</span><span class="kpi-value" style="color:#f59e0b;">{{ partnerStats.pending }}</span></div>
+          <div class="kpi-card" style="border-left:4px solid #10b981;"><span class="kpi-label">Acceptées</span><span class="kpi-value" style="color:#10b981;">{{ partnerStats.accepted }}</span></div>
+          <div class="kpi-card" style="border-left:4px solid #ef4444;"><span class="kpi-label">Refusées</span><span class="kpi-value" style="color:#ef4444;">{{ partnerStats.refused }}</span></div>
         </div>
-        <div class="kpi-card" style="border-left:4px solid #f59e0b;">
-          <span class="kpi-label">En attente</span>
-          <span class="kpi-value" style="color:#f59e0b;">{{ partnerStats.pending }}</span>
-        </div>
-        <div class="kpi-card" style="border-left:4px solid #10b981;">
-          <span class="kpi-label">Acceptées</span>
-          <span class="kpi-value" style="color:#10b981;">{{ partnerStats.accepted }}</span>
-        </div>
-        <div class="kpi-card" style="border-left:4px solid #ef4444;">
-          <span class="kpi-label">Refusées</span>
-          <span class="kpi-value" style="color:#ef4444;">{{ partnerStats.refused }}</span>
-        </div>
-      </div>
-
-      <!-- Demandes table -->
-      <div class="rounded-lg border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800">
-        <div class="px-5 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
-          <h2 class="text-base font-semibold text-gray-900 dark:text-white">Mes demandes</h2>
-          <span class="text-xs text-gray-500">{{ partnerStats.total }} au total</span>
-        </div>
-        @if (partnerStats.demandes.length === 0) {
-          <div class="p-10 text-center text-gray-400">
-            <div style="font-size:2.5rem;">📋</div>
-            <p class="mt-3 font-medium">Aucune demande soumise pour l'instant.</p>
-            <a routerLink="/demande-form"
-               class="mt-4 inline-block rounded-lg px-4 py-2 text-sm font-semibold text-white"
-               style="background:#86B817;">
-              Soumettre ma première demande
-            </a>
+        <div class="rounded-lg border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800">
+          <div class="px-5 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
+            <h2 class="text-base font-semibold text-gray-900 dark:text-white">Mes demandes</h2>
+            <span class="text-xs text-gray-500">{{ partnerStats.total }} au total</span>
           </div>
-        } @else {
-          <div class="overflow-x-auto">
-            <table class="min-w-full text-sm text-gray-700 dark:text-gray-300">
-              <thead class="bg-gray-50 dark:bg-gray-800 text-gray-500">
-                <tr>
-                  <th class="px-4 py-3 text-left">#</th>
-                  <th class="px-4 py-3 text-left">Nom du lieu</th>
-                  <th class="px-4 py-3 text-left">Catégorie</th>
-                  <th class="px-4 py-3 text-left">Adresse</th>
-                  <th class="px-4 py-3 text-left">Statut</th>
-                  <th class="px-4 py-3 text-left">Soumis le</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-                @for (d of partnerStats.demandes; track d.id) {
-                  <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                    <td class="px-4 py-3 font-medium text-gray-500">#{{ d.id }}</td>
-                    <td class="px-4 py-3 font-semibold text-gray-900 dark:text-white">{{ d.name }}</td>
-                    <td class="px-4 py-3 text-gray-600">{{ d.categorie?.name || '—' }}</td>
-                    <td class="px-4 py-3 text-gray-500">{{ d.address || '—' }}</td>
-                    <td class="px-4 py-3">
-                      @if (d.statut === 'PENDING') {
-                        <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-amber-100 text-amber-800">⏳ En attente</span>
-                      } @else if (d.statut === 'ACCEPTED') {
-                        <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-emerald-100 text-emerald-800">✅ Acceptée</span>
-                      } @else {
-                        <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-rose-100 text-rose-800">❌ Refusée</span>
-                      }
-                    </td>
-                    <td class="px-4 py-3 text-gray-500">{{ d.createdAt | date:'dd/MM/yyyy' }}</td>
+          @if (partnerStats.demandes.length === 0) {
+            <div class="p-10 text-center text-gray-400">
+              <div style="font-size:2.5rem;">📋</div>
+              <p class="mt-3 font-medium">Aucune demande soumise pour l'instant.</p>
+              <a routerLink="/demande-form" class="mt-4 inline-block rounded-lg px-4 py-2 text-sm font-semibold text-white" style="background:#86B817;">Soumettre ma première demande</a>
+            </div>
+          } @else {
+            <div class="overflow-x-auto">
+              <table class="min-w-full text-sm text-gray-700 dark:text-gray-300">
+                <thead class="bg-gray-50 dark:bg-gray-800 text-gray-500">
+                  <tr>
+                    <th class="px-4 py-3 text-left">#</th>
+                    <th class="px-4 py-3 text-left">Nom du lieu</th>
+                    <th class="px-4 py-3 text-left">Catégorie</th>
+                    <th class="px-4 py-3 text-left">Adresse</th>
+                    <th class="px-4 py-3 text-left">Statut</th>
+                    <th class="px-4 py-3 text-left">Soumis le</th>
                   </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-        }
-      </div>
+                </thead>
+                <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                  @for (d of partnerStats.demandes; track d.id) {
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                      <td class="px-4 py-3 font-medium text-gray-500">#{{ d.id }}</td>
+                      <td class="px-4 py-3 font-semibold text-gray-900 dark:text-white">{{ d.name }}</td>
+                      <td class="px-4 py-3 text-gray-600">{{ d.categorie?.name || '—' }}</td>
+                      <td class="px-4 py-3 text-gray-500">{{ d.address || '—' }}</td>
+                      <td class="px-4 py-3">
+                        @if (d.statut === 'PENDING') {
+                          <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-amber-100 text-amber-800">⏳ En attente</span>
+                        } @else if (d.statut === 'ACCEPTED') {
+                          <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-emerald-100 text-emerald-800">✅ Acceptée</span>
+                        } @else {
+                          <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-rose-100 text-rose-800">❌ Refusée</span>
+                        }
+                      </td>
+                      <td class="px-4 py-3 text-gray-500">{{ d.createdAt | date:'dd/MM/yyyy' }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      }
 
-      } <!-- end demandes tab -->
-
-      <!-- ── TAB: Réservations ── -->
       @if (partnerTab === 'reservations') {
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div class="kpi-card">
-            <span class="kpi-label">Total réservations</span>
-            <span class="kpi-value">{{ reservationStats.total }}</span>
-          </div>
-          <div class="kpi-card" style="border-left:4px solid #10b981;">
-            <span class="kpi-label">Confirmées</span>
-            <span class="kpi-value" style="color:#10b981;">{{ reservationStats.confirmed }}</span>
-          </div>
-          <div class="kpi-card" style="border-left:4px solid #f59e0b;">
-            <span class="kpi-label">En attente</span>
-            <span class="kpi-value" style="color:#f59e0b;">{{ reservationStats.pending }}</span>
-          </div>
-          <div class="kpi-card" style="border-left:4px solid #ef4444;">
-            <span class="kpi-label">Annulées</span>
-            <span class="kpi-value" style="color:#ef4444;">{{ reservationStats.cancelled }}</span>
-          </div>
+          <div class="kpi-card"><span class="kpi-label">Total réservations</span><span class="kpi-value">{{ reservationStats.total }}</span></div>
+          <div class="kpi-card" style="border-left:4px solid #10b981;"><span class="kpi-label">Confirmées</span><span class="kpi-value" style="color:#10b981;">{{ reservationStats.confirmed }}</span></div>
+          <div class="kpi-card" style="border-left:4px solid #f59e0b;"><span class="kpi-label">En attente</span><span class="kpi-value" style="color:#f59e0b;">{{ reservationStats.pending }}</span></div>
+          <div class="kpi-card" style="border-left:4px solid #ef4444;"><span class="kpi-label">Annulées</span><span class="kpi-value" style="color:#ef4444;">{{ reservationStats.cancelled }}</span></div>
         </div>
-
         <div class="rounded-lg border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800">
           <div class="px-5 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
             <h2 class="text-base font-semibold text-gray-900 dark:text-white">Réservations sur mes lieux</h2>
             <span class="text-xs text-gray-500">{{ reservationStats.total }} au total</span>
           </div>
           @if (partnerReservations.length === 0) {
-            <div class="p-10 text-center text-gray-400">
-              <div style="font-size:2.5rem;">📅</div>
-              <p class="mt-3 font-medium">Aucune réservation pour le moment.</p>
-            </div>
+            <div class="p-10 text-center text-gray-400"><div style="font-size:2.5rem;">📅</div><p class="mt-3 font-medium">Aucune réservation pour le moment.</p></div>
           } @else {
             <div class="overflow-x-auto">
               <table class="min-w-full text-sm text-gray-700 dark:text-gray-300">
@@ -171,17 +131,10 @@
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                       <td class="px-4 py-3 font-medium text-gray-500">#{{ r.id }}</td>
                       <td class="px-4 py-3 font-semibold text-gray-900 dark:text-white">{{ r.place?.name || '—' }}</td>
-                      <td class="px-4 py-3 whitespace-nowrap text-gray-600">
-                        {{ r.startDate | date:'dd/MM/yyyy' }} → {{ r.endDate | date:'dd/MM/yyyy' }}
-                      </td>
+                      <td class="px-4 py-3 whitespace-nowrap text-gray-600">{{ r.startDate | date:'dd/MM/yyyy' }} → {{ r.endDate | date:'dd/MM/yyyy' }}</td>
                       <td class="px-4 py-3 text-center text-gray-600">{{ r.numberOfPeople }}</td>
                       <td class="px-4 py-3 text-gray-500 max-w-[180px] truncate">{{ r.specialRequests || '—' }}</td>
-                      <td class="px-4 py-3">
-                        <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold"
-                              [ngClass]="resStatusClass(r.status)">
-                          {{ resStatusLabel(r.status) }}
-                        </span>
-                      </td>
+                      <td class="px-4 py-3"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold" [ngClass]="resStatusClass(r.status)">{{ resStatusLabel(r.status) }}</span></td>
                       <td class="px-4 py-3 text-gray-500">{{ r.createdAt | date:'dd/MM/yyyy' }}</td>
                     </tr>
                   }
@@ -190,155 +143,346 @@
             </div>
           }
         </div>
-      } <!-- end reservations tab -->
-
+      }
     }
 
   <!-- ══ ADMIN DASHBOARD ════════════════════════════════════════════════ -->
   } @else {
-  <header class="flex items-center justify-between">
-    <div>
-      <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Tableau de bord</h1>
-      <p class="text-sm text-gray-500 mt-1">Vue d'ensemble de la plateforme Tunéo.</p>
-    </div>
-  </header>
 
   @if (loading) {
-    <div class="rounded-lg border border-gray-200 bg-white p-8 text-center text-gray-500 dark:bg-gray-900 dark:border-gray-800">
-      Chargement des statistiques…
-    </div>
+    <div class="card" style="padding:3rem;text-align:center;color:var(--muted)">Chargement des statistiques…</div>
   } @else if (error) {
-    <div class="rounded-lg border border-rose-200 bg-rose-50 p-4 text-rose-700">
-      {{ error }}
-    </div>
+    <div style="padding:1rem;border-radius:var(--radius);border:1px solid #fda29b;background:#fef3f2;color:#b42318;">{{ error }}</div>
   } @else if (stats) {
-    <!-- KPI cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-      <div class="kpi-card">
-        <span class="kpi-label">Utilisateurs</span>
-        <span class="kpi-value">{{ stats.usersCount | number }}</span>
-      </div>
-      <div class="kpi-card">
-        <span class="kpi-label">Places</span>
-        <span class="kpi-value">{{ stats.placesCount | number }}</span>
-      </div>
-      <div class="kpi-card">
-        <span class="kpi-label">Réservations</span>
-        <span class="kpi-value">{{ stats.reservationsCount | number }}</span>
-      </div>
-      <div class="kpi-card">
-        <span class="kpi-label">Revenu (TND)</span>
-        <span class="kpi-value">{{ stats.revenueTnd | number:'1.0-3' }}</span>
-      </div>
-      <div class="kpi-card">
-        <span class="kpi-label">Demandes en attente</span>
-        <span class="kpi-value">{{ stats.pendingDemandes | number }}</span>
-      </div>
-      <div class="kpi-card">
-        <span class="kpi-label">Partenaires actifs</span>
-        <span class="kpi-value">{{ stats.activePartners | number }}</span>
-      </div>
-    </div>
 
-    <!-- Charts -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <div class="lg:col-span-2 chart-card">
-        <h2 class="chart-title">Réservations par mois</h2>
+  <div class="dash-page">
+
+    <!-- ─────────────────────────────────────────────────────────────────
+         ROW 1+2  top-grid
+    ──────────────────────────────────────────────────────────────────── -->
+    <div class="top-grid">
+
+      <!-- Customers KPI -->
+      <div class="card cell-customers">
+        <div class="kpi-icon">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <p class="card-title">Customers</p>
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:.5rem;flex-wrap:wrap">
+          <p class="card-value">{{ stats.usersCount | number }}</p>
+          <span class="pill" [ngClass]="customersChangeInfo.up ? 'pill-green' : 'pill-red'">
+            {{ customersChangeInfo.up ? '↑' : '↓' }} {{ customersChangeInfo.pct }}%
+          </span>
+        </div>
+      </div>
+
+      <!-- Orders KPI -->
+      <div class="card cell-orders">
+        <div class="kpi-icon">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+        </div>
+        <p class="card-title">Orders</p>
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:.5rem;flex-wrap:wrap">
+          <p class="card-value">{{ stats.reservationsCount | number }}</p>
+          <span class="pill" [ngClass]="ordersChangeInfo.up ? 'pill-green' : 'pill-red'">
+            {{ ordersChangeInfo.up ? '↑' : '↓' }} {{ ordersChangeInfo.pct }}%
+          </span>
+        </div>
+      </div>
+
+      <!-- Monthly Target (tall — spans rows 1 & 2) -->
+      <div class="card cell-target">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem">
+          <div>
+            <p class="section-title">Monthly Target</p>
+            <p class="section-sub">Target you've set for each month</p>
+          </div>
+        </div>
+
+        <!-- Radial gauge -->
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <apx-chart
+            [chart]="targetGaugeOptions.chart!"
+            [series]="targetGaugeOptions.series!"
+            [plotOptions]="targetGaugeOptions.plotOptions!"
+            [fill]="targetGaugeOptions.fill!"
+            [stroke]="targetGaugeOptions.stroke!"
+          ></apx-chart>
+
+          <!-- +10% badge + message -->
+          <div style="margin-top:-1rem;text-align:center">
+            <span class="pill pill-green" style="font-size:.75rem">+10%</span>
+            <p style="font-size:.8125rem;color:var(--muted);margin:.75rem 0 0;text-align:center;line-height:1.5">
+              You earn {{ targetToday | number:'1.0-0' }} TND today, it's higher than last month.<br>
+              Keep up your good work!
+            </p>
+          </div>
+        </div>
+
+        <!-- Footer: Target / Revenue / Today -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;border-top:1px solid var(--border);padding-top:1rem;margin-top:1rem;text-align:center">
+          <div>
+            <p style="font-size:.75rem;color:var(--muted);margin:0">Target</p>
+            <p style="font-size:.875rem;font-weight:600;color:var(--heading);margin:.2rem 0 0">
+              {{ targetGoal | number:'1.0-0' }} <span style="font-size:.7rem;font-weight:400">TND</span>
+              <span style="color:var(--red);font-size:.7rem"> ↓</span>
+            </p>
+          </div>
+          <div>
+            <p style="font-size:.75rem;color:var(--muted);margin:0">Revenue</p>
+            <p style="font-size:.875rem;font-weight:600;color:var(--heading);margin:.2rem 0 0">
+              {{ targetRevenue | number:'1.0-0' }} <span style="font-size:.7rem;font-weight:400">TND</span>
+              <span style="color:var(--green);font-size:.7rem"> ↑</span>
+            </p>
+          </div>
+          <div>
+            <p style="font-size:.75rem;color:var(--muted);margin:0">Today</p>
+            <p style="font-size:.875rem;font-weight:600;color:var(--heading);margin:.2rem 0 0">
+              {{ targetToday | number:'1.0-0' }} <span style="font-size:.7rem;font-weight:400">TND</span>
+              <span style="color:var(--green);font-size:.7rem"> ↑</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Monthly Sales bar chart -->
+      <div class="card cell-monthly-sales">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+          <p class="section-title">Monthly Sales</p>
+        </div>
         <apx-chart
-          [chart]="monthlyReservationsOptions.chart!"
-          [series]="monthlyReservationsOptions.series!"
-          [xaxis]="monthlyReservationsOptions.xaxis!"
-          [dataLabels]="monthlyReservationsOptions.dataLabels!"
-          [colors]="monthlyReservationsOptions.colors!"
-          [plotOptions]="monthlyReservationsOptions.plotOptions!"
-          [grid]="monthlyReservationsOptions.grid!"
+          [chart]="monthlySalesOptions.chart!"
+          [series]="monthlySalesOptions.series!"
+          [xaxis]="monthlySalesOptions.xaxis!"
+          [yaxis]="monthlySalesOptions.yaxis!"
+          [plotOptions]="monthlySalesOptions.plotOptions!"
+          [colors]="monthlySalesOptions.colors!"
+          [dataLabels]="monthlySalesOptions.dataLabels!"
+          [grid]="monthlySalesOptions.grid!"
+          [tooltip]="monthlySalesOptions.tooltip!"
         ></apx-chart>
       </div>
-      <div class="chart-card">
-        <h2 class="chart-title">Statut des réservations</h2>
-        <apx-chart
-          [chart]="statusBreakdownOptions.chart!"
-          [series]="statusBreakdownOptions.series!"
-          [labels]="statusBreakdownOptions.labels!"
-          [colors]="statusBreakdownOptions.colors!"
-          [legend]="statusBreakdownOptions.legend!"
-          [dataLabels]="statusBreakdownOptions.dataLabels!"
-        ></apx-chart>
-      </div>
-    </div>
 
-    <div class="chart-card">
-      <h2 class="chart-title">Revenu (TND) — 12 derniers mois</h2>
+    </div><!-- /top-grid -->
+
+    <!-- ─────────────────────────────────────────────────────────────────
+         ROW 3  Statistics
+    ──────────────────────────────────────────────────────────────────── -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.75rem;margin-bottom:.75rem">
+        <div>
+          <p class="section-title">Statistics</p>
+          <p class="section-sub">Target you've set for each month</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
+          <div class="seg-toggle">
+            <button class="seg-btn" [ngClass]="{active: statsTab === 'Monthly'}"    (click)="setStatsTab('Monthly')">Monthly</button>
+            <button class="seg-btn" [ngClass]="{active: statsTab === 'Quarterly'}"  (click)="setStatsTab('Quarterly')">Quarterly</button>
+            <button class="seg-btn" [ngClass]="{active: statsTab === 'Annually'}"   (click)="setStatsTab('Annually')">Annually</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:.375rem;font-size:.8125rem;color:var(--muted);
+                      border:1px solid var(--border);border-radius:8px;padding:.3rem .7rem;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            May 31 – Jun 6
+          </div>
+        </div>
+      </div>
+
       <apx-chart
-        [chart]="revenueTrendOptions.chart!"
-        [series]="revenueTrendOptions.series!"
-        [xaxis]="revenueTrendOptions.xaxis!"
-        [colors]="revenueTrendOptions.colors!"
-        [stroke]="revenueTrendOptions.stroke!"
-        [dataLabels]="revenueTrendOptions.dataLabels!"
-        [fill]="revenueTrendOptions.fill!"
-        [grid]="revenueTrendOptions.grid!"
+        [chart]="statisticsOptions.chart!"
+        [series]="statisticsOptions.series!"
+        [xaxis]="statisticsOptions.xaxis!"
+        [yaxis]="statisticsOptions.yaxis!"
+        [colors]="statisticsOptions.colors!"
+        [stroke]="statisticsOptions.stroke!"
+        [fill]="statisticsOptions.fill!"
+        [dataLabels]="statisticsOptions.dataLabels!"
+        [grid]="statisticsOptions.grid!"
+        [tooltip]="statisticsOptions.tooltip!"
+        [legend]="statisticsOptions.legend!"
       ></apx-chart>
     </div>
 
-    <!-- Recent reservations -->
-    <div class="rounded-lg border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800">
-      <div class="px-5 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
-        <h2 class="text-base font-semibold text-gray-900 dark:text-white">Réservations récentes</h2>
-        <span class="text-xs text-gray-500">10 dernières</span>
+    <!-- ─────────────────────────────────────────────────────────────────
+         ROW 4  bottom-grid
+    ──────────────────────────────────────────────────────────────────── -->
+    <div class="bottom-grid">
+
+      <!-- Customers Demographic -->
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem">
+          <div>
+            <p class="section-title">Customers Demographic</p>
+            <p class="section-sub">Number of customer based on country</p>
+          </div>
+        </div>
+
+        <!-- Simplified world map SVG -->
+        <div style="border-radius:10px;overflow:hidden;background:#F8FAFC;padding:.5rem">
+          <svg viewBox="0 0 900 440" xmlns="http://www.w3.org/2000/svg"
+               style="width:100%;height:auto;display:block">
+            <!-- Background ocean -->
+            <rect width="900" height="440" fill="#EEF2FF" rx="8"/>
+            <!-- Simplified continent fills — decorative only -->
+            <!-- North America -->
+            <path d="M60,60 L160,50 L200,90 L210,160 L180,200 L140,220 L100,200 L70,160 L55,120 Z"
+                  fill="#C7D7FD" stroke="#fff" stroke-width="1.5"/>
+            <!-- South America -->
+            <path d="M130,240 L185,230 L205,280 L200,350 L170,380 L140,360 L120,310 L110,270 Z"
+                  fill="#C7D7FD" stroke="#fff" stroke-width="1.5"/>
+            <!-- Europe -->
+            <path d="M390,40 L460,35 L480,70 L470,110 L440,120 L410,110 L390,80 Z"
+                  fill="#C7D7FD" stroke="#fff" stroke-width="1.5"/>
+            <!-- Africa -->
+            <path d="M390,130 L470,120 L500,160 L510,240 L490,320 L450,360 L410,340 L385,280 L375,200 L375,160 Z"
+                  fill="#C7D7FD" stroke="#fff" stroke-width="1.5"/>
+            <!-- Asia -->
+            <path d="M480,35 L700,30 L760,70 L770,140 L720,180 L650,190 L580,170 L510,150 L480,100 Z"
+                  fill="#C7D7FD" stroke="#fff" stroke-width="1.5"/>
+            <!-- South-East Asia & Australia -->
+            <path d="M680,200 L760,190 L790,230 L780,280 L740,290 L700,270 L675,240 Z"
+                  fill="#C7D7FD" stroke="#fff" stroke-width="1.5"/>
+            <path d="M720,320 L800,310 L830,360 L810,400 L760,405 L720,380 L710,350 Z"
+                  fill="#C7D7FD" stroke="#fff" stroke-width="1.5"/>
+            <!-- Country dots -->
+            <!-- Tunisia (approx location) -->
+            <circle cx="432" cy="148" r="7" fill="#465FFF" opacity=".9"/>
+            <!-- France -->
+            <circle cx="415" cy="80"  r="5" fill="#465FFF" opacity=".6"/>
+            <!-- Germany -->
+            <circle cx="430" cy="68"  r="4" fill="#465FFF" opacity=".5"/>
+          </svg>
+        </div>
+
+        <!-- Country list -->
+        <div style="margin-top:1rem;display:flex;flex-direction:column;gap:.875rem">
+          @for (c of demographicData; track c.name) {
+            <div style="display:flex;align-items:center;gap:.75rem">
+              <span style="font-size:1.375rem;flex-shrink:0">{{ c.flag }}</span>
+              <div style="flex:1;min-width:0">
+                <div style="display:flex;justify-content:space-between;margin-bottom:.3rem">
+                  <span style="font-size:.8125rem;font-weight:500;color:var(--heading)">{{ c.name }}</span>
+                  <span style="font-size:.75rem;color:var(--muted)">{{ c.count | number }} · {{ c.pct }}%</span>
+                </div>
+                <div style="height:5px;background:#F2F4F7;border-radius:99px;overflow:hidden">
+                  <div [style.width.%]="c.pct"
+                       style="height:100%;background:var(--brand);border-radius:99px;transition:width .4s ease"></div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
       </div>
-      <div class="overflow-x-auto">
-        <table class="min-w-full text-sm text-gray-700 dark:text-gray-300">
-          <thead class="bg-gray-50 dark:bg-gray-800 text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-            <tr>
-              <th class="px-4 py-3 text-left font-semibold">#</th>
-              <th class="px-4 py-3 text-left font-semibold">Place</th>
-              <th class="px-4 py-3 text-left font-semibold">Client (ID Keycloak)</th>
-              <th class="px-4 py-3 text-left font-semibold">Période</th>
-              <th class="px-4 py-3 text-left font-semibold">Personnes</th>
-              <th class="px-4 py-3 text-left font-semibold">Paiement Stripe</th>
-              <th class="px-4 py-3 text-left font-semibold">Statut</th>
-              <th class="px-4 py-3 text-left font-semibold">Créée le</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
-            @for (r of stats.recentReservations; track r.id) {
-              <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                <td class="px-4 py-3 font-semibold text-gray-900 dark:text-white">#{{ r.id }}</td>
-                <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">{{ r.placeName || '—' }}</td>
-                <td class="px-4 py-3 text-gray-500 dark:text-gray-400 font-mono text-xs max-w-[140px] truncate"
-                    [title]="r.keycloakUserId">
-                  {{ r.keycloakUserId ? r.keycloakUserId.slice(0,8) + '…' : '—' }}
-                </td>
-                <td class="px-4 py-3 whitespace-nowrap text-gray-700 dark:text-gray-300">
-                  {{ r.startDate | date:'dd/MM/yy' }} → {{ r.endDate | date:'dd/MM/yy' }}
-                </td>
-                <td class="px-4 py-3 text-center text-gray-700 dark:text-gray-300">{{ r.numberOfPeople }}</td>
-                <td class="px-4 py-3 font-mono text-xs text-gray-500 dark:text-gray-400">
-                  @if (r.stripePaymentId) {
-                    <span class="inline-flex items-center gap-1">
-                      <span class="h-2 w-2 rounded-full bg-emerald-400 flex-shrink-0"></span>
-                      {{ r.stripePaymentId.slice(0, 14) }}…
-                    </span>
-                  } @else {
-                    <span class="text-gray-400 dark:text-gray-600">—</span>
-                  }
-                </td>
-                <td class="px-4 py-3">
-                  <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold"
-                        [ngClass]="statusClass(r.status)">
-                    {{ statusLabel(r.status) }}
-                  </span>
-                </td>
-                <td class="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap">{{ r.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+
+      <!-- Recent Orders -->
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.75rem;margin-bottom:.875rem">
+          <p class="section-title">Recent Orders</p>
+          <div style="display:flex;align-items:center;gap:.625rem;flex-wrap:wrap">
+            <div class="tab-strip">
+              <button class="tab-btn" [ngClass]="{active: ordersTab === 'all'}"      (click)="setOrdersTab('all')">See all</button>
+              <button class="tab-btn" [ngClass]="{active: ordersTab === 'demanded'}" (click)="setOrdersTab('demanded')">Demanded</button>
+              <button class="tab-btn" [ngClass]="{active: ordersTab === 'accepted'}" (click)="setOrdersTab('accepted')">Accepted</button>
+              <button class="tab-btn" [ngClass]="{active: ordersTab === 'refused'}"  (click)="setOrdersTab('refused')">Refused</button>
+            </div>
+            <a routerLink="/admin/reservations"
+               style="font-size:.8125rem;font-weight:500;color:var(--brand);text-decoration:none;white-space:nowrap">
+              See all
+            </a>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:.8125rem">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border)">
+                <th style="padding:.6rem .75rem .6rem 0;text-align:left;font-weight:500;color:var(--muted);white-space:nowrap">Products</th>
+                <th style="padding:.6rem .75rem;text-align:left;font-weight:500;color:var(--muted)">Category</th>
+                <th style="padding:.6rem .75rem;text-align:left;font-weight:500;color:var(--muted)">Price</th>
+                <th style="padding:.6rem 0 .6rem .75rem;text-align:left;font-weight:500;color:var(--muted)">Status</th>
               </tr>
-            } @empty {
-              <tr><td colspan="8" class="px-4 py-6 text-center text-gray-400 dark:text-gray-500">Aucune réservation pour le moment.</td></tr>
-            }
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              @for (r of filteredOrders; track r.id) {
+                <tr style="border-bottom:1px solid var(--border)">
+
+                  <!-- Product: thumb + name + "N Variant(s)" -->
+                  <td style="padding:.75rem .75rem .75rem 0;min-width:200px">
+                    <div style="display:flex;align-items:center;gap:.625rem">
+                      @if (r.placeImageUrl) {
+                        <img [src]="r.placeImageUrl" alt=""
+                             style="width:38px;height:38px;border-radius:8px;object-fit:cover;flex-shrink:0;border:1px solid var(--border)">
+                      } @else {
+                        <div style="width:38px;height:38px;border-radius:8px;background:var(--brand-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                          <svg width="16" height="16" fill="none" stroke="var(--brand)" stroke-width="1.8" viewBox="0 0 24 24">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9 22 9 12 15 12 15 22"/>
+                          </svg>
+                        </div>
+                      }
+                      <div style="min-width:0">
+                        <p style="font-weight:500;color:var(--heading);margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px">
+                          {{ r.placeName || 'Place #' + r.id }}
+                        </p>
+                        <p style="color:var(--muted);margin:.1rem 0 0;font-size:.75rem">
+                          {{ r.numberOfPeople }} Variant(s)
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+
+                  <!-- Category — derived from status for now -->
+                  <td style="padding:.75rem;color:var(--muted);white-space:nowrap">
+                    Réservation
+                  </td>
+
+                  <!-- Price — we don't have per-reservation amount; show "—" or a placeholder -->
+                  <td style="padding:.75rem;color:var(--heading);font-weight:500;white-space:nowrap">
+                    @if (r.stripePaymentId) {
+                      <span style="color:var(--green)">Payé</span>
+                    } @else {
+                      <span style="color:var(--muted)">—</span>
+                    }
+                  </td>
+
+                  <!-- Status pill -->
+                  <td style="padding:.75rem 0 .75rem .75rem">
+                    <span class="status-pill" [ngClass]="orderStatusClass(r.status)">
+                      {{ orderStatusLabel(r.status) }}
+                    </span>
+                  </td>
+
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="4" style="padding:2.5rem;text-align:center;color:var(--muted)">
+                    Aucune commande pour ce filtre.
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+
+    </div><!-- /bottom-grid -->
+
+  </div><!-- /dash-page -->
+
   }
   } <!-- end @else admin -->
 </div>
